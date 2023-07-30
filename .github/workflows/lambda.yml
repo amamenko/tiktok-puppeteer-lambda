@@ -8,7 +8,7 @@ jobs:
         node-version: [18.x]
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v3
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v1
         with:
@@ -20,14 +20,15 @@ jobs:
         env:
           CI: true
       - name: zip
-        uses: montudor/action-zip@v0.1.0
+        uses: montudor/action-zip@v1
         with:
           args: zip -qq -r ./bundle.zip ./
       - name: default deploy
-        uses: appleboy/lambda-action@master
+        uses: appleboy/lambda-action@v0.1.9
         with:
           aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws_region: us-east-1
+          aws_region: ${{ secrets.AWS_REGION }}
           function_name: tikTokPuppeteerFunction
           zip_file: bundle.zip
+          runtime: nodejs18.x
