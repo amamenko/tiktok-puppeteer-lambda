@@ -22,7 +22,10 @@ jobs:
       - name: Install zip
         uses: montudor/action-zip@v1
       - name: Zip output
-        run: cd dist; zip -qq -r ../bundle.zip *
+        run: |
+          cp -r package.json package-lock.json node_modules dist
+          cd dist
+          zip -qq -r ../bundle.zip *
       - name: default deploy
         uses: appleboy/lambda-action@v0.1.9
         with:
