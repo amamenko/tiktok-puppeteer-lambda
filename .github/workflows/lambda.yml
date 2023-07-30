@@ -1,5 +1,7 @@
-name: Deploy to Lambda
-on: [push]
+name: Deploy TikTok Puppeteer Image to ECR
+on:
+  push:
+    branches: [main]
 jobs:
   deploy_source:
     name: Build and Deploy Lambda
@@ -8,30 +10,22 @@ jobs:
         node-version: [18.x]
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
+      - name: Check out code
+        uses: actions/checkout@v3
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
         with:
-          node-version: ${{ matrix.node-version }}
-      - name: npm install and build
-        run: |
-          npm ci
-          npm run build --if-present
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+      - name: Build, tag, and push image to Amazon ECR
         env:
-          CI: true
-      - name: Install zip
-        uses: montudor/action-zip@v1
-      - name: Zip output
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          ECR_REPOSITORY: tiktok_puppeteer
+          IMAGE_TAG: latest
         run: |
-          cp -r package.json package-lock.json node_modules dist
-          cd dist
-          zip -qq -r ../bundle.zip *
-      - name: default deploy
-        uses: appleboy/lambda-action@v0.1.9
-        with:
-          aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws_region: ${{ secrets.AWS_REGION }}
-          function_name: tikTokPuppeteerFunction
-          zip_file: bundle.zip
-          runtime: nodejs18.x
+          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
