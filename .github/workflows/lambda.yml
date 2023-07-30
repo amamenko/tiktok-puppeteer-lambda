@@ -1,10 +1,10 @@
-name: Deploy TikTok Puppeteer Image to ECR
+name: Deploy TikTok Puppeteer Image to Lambda
 on:
   push:
     branches: [main]
 jobs:
   deploy_source:
-    name: Build and Deploy Lambda
+    name: Build and deploy Lambda function
     strategy:
       matrix:
         node-version: [18.x]
@@ -17,7 +17,7 @@ jobs:
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: us-east-1
+          aws-region: ${{ secrets.AWS_REGION }}
       - name: Login to Amazon ECR
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
@@ -29,3 +29,12 @@ jobs:
         run: |
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+      - name: Deploy Lambda function from Amazon ECR image
+        uses: appleboy/lambda-action@v0.1.9
+        with:
+          aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws_region: ${{ secrets.AWS_REGION }}
+          function_name: tikTokPuppeteerFunction
+          image_uri: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/tiktok_puppeteer:latest
+          runtime: nodejs18.x
