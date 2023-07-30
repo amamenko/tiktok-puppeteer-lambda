@@ -37,4 +37,3 @@ jobs:
           aws_region: ${{ secrets.AWS_REGION }}
           function_name: tikTokPuppeteerFunction
           image_uri: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/tiktok_puppeteer:latest
-          runtime: nodejs18.x
