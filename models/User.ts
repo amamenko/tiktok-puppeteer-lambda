@@ -1,6 +1,6 @@
 import mongoose, { Schema } from "mongoose";
 
-const userSchema = new mongoose.Schema(
+export const userSchema = new mongoose.Schema(
   {
     displayID: String,
     userID: String,
@@ -8,7 +8,3 @@ const userSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
-
-const User = mongoose.model("User", userSchema);
-
-export { User };

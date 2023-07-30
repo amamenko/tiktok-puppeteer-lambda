@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const dailyLiveSchema = new mongoose.Schema(
+export const dailyLiveSchema = new mongoose.Schema(
   {
     date: String,
     lives: [
@@ -15,7 +15,3 @@ const dailyLiveSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
-
-const DailyLive = mongoose.model("DailyLive", dailyLiveSchema);
-
-export { DailyLive };

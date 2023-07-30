@@ -1,6 +1,8 @@
+import "dotenv/config";
 import { Context, APIGatewayProxyCallback } from "aws-lambda";
 import mongoose from "mongoose";
-import { User } from "./models/User";
+import { userSchema } from "./models/User";
+import { dailyLiveSchema } from "./models/DailyLive";
 
 let conn = null;
 
@@ -19,10 +21,11 @@ export const handler = async (
     });
 
     await conn.asPromise();
-    // conn.model("Test", new mongoose.Schema({ name: String }));
+    conn.model("DailyLive", dailyLiveSchema);
+    conn.model("User", userSchema);
   }
 
-  // const M = conn.model("Test");
+  const User = conn.model("User");
 
   const doc = await User.findOne();
   console.log(doc);
