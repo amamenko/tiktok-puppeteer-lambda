@@ -1,0 +1,19 @@
+{
+  "name": "tiktok-puppeteer-lambda",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/amamenko/tiktok-puppeteer-lambda.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/amamenko/tiktok-puppeteer-lambda/issues"
+  },
+  "homepage": "https://github.com/amamenko/tiktok-puppeteer-lambda#readme"
+}
