@@ -1,6 +1,6 @@
 import { Context, APIGatewayProxyCallback } from "aws-lambda";
 
-export const lambdaHandler = async (
+export const handler = async (
   event: any,
   context: Context,
   callback: APIGatewayProxyCallback
