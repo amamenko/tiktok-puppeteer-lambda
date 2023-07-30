@@ -18,7 +18,8 @@
   },
   "homepage": "https://github.com/amamenko/tiktok-puppeteer-lambda#readme",
   "dependencies": {
-    "aws-lambda": "^1.0.7"
+    "aws-lambda": "^1.0.7",
+    "mongoose": "^7.4.1"
   },
   "devDependencies": {
     "@types/aws-lambda": "^8.10.119",
