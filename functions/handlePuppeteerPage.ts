@@ -1,6 +1,7 @@
 import { handleRequestFinished } from "./handleRequestFinished";
 import { waitForTimeout } from "./waitForTimeout";
 import { Browser, HTTPRequest, Page } from "puppeteer-core";
+import { logger } from "../logger/logger";
 
 export const handlePuppeteerPage = async (browser: Browser) => {
   try {
@@ -33,7 +34,7 @@ export const handlePuppeteerPage = async (browser: Browser) => {
     try {
       await page.click("button.semi-button-secondary");
     } catch (e) {
-      console.error("No log in button found!");
+      logger("server").error("No log in button found!");
     }
 
     await page.focus('input[placeholder="Enter email address"]');
@@ -43,7 +44,7 @@ export const handlePuppeteerPage = async (browser: Browser) => {
     try {
       await page.click("button.semi-button-tertiary.semi-button-size-large");
     } catch (e) {
-      console.error("No log in button found!");
+      logger("server").error("No log in button found!");
     }
 
     await waitForTimeout(10000);
@@ -76,6 +77,6 @@ export const handlePuppeteerPage = async (browser: Browser) => {
   } finally {
     // ALWAYS make sure Puppeteer closes the browser when finished regardless of success or error
     await browser.close();
-    console.log("Scraping complete. Browser closed.");
+    logger("server").info("Scraping complete. Browser closed.");
   }
 };

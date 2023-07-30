@@ -24,7 +24,9 @@
     "dotenv": "^16.3.1",
     "mongoose": "^7.4.1",
     "puppeteer-extra": "^3.3.6",
-    "puppeteer-extra-plugin-stealth": "^2.11.2"
+    "puppeteer-extra-plugin-stealth": "^2.11.2",
+    "winston": "^3.10.0",
+    "winston-papertrail-transport": "^1.0.9"
   },
   "devDependencies": {
     "@types/aws-lambda": "^8.10.119",

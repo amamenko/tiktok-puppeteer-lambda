@@ -2,6 +2,7 @@ import { HTTPRequest } from "puppeteer-core";
 import { format, subDays } from "date-fns";
 import { Live } from "../interfaces/live.interface";
 import { conn } from "..";
+import { logger } from "../logger/logger";
 
 export const handleRequestFinished = async (
   request: HTTPRequest,
@@ -170,7 +171,7 @@ export const handleRequestFinished = async (
           const successStatement = `Successfully updated ${
             updatedLivesNumber - allLiveResults.length + 1
           }-${updatedLivesNumber} out of ${totalLives} lives at ${fullTimeDate}!`;
-          console.log(successStatement);
+          logger("server").info(successStatement);
           return allLiveResults.length;
         }
       }

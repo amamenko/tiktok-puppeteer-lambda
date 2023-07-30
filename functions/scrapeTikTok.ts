@@ -3,6 +3,7 @@ import chromium from "chrome-aws-lambda";
 import puppeteer from "puppeteer-extra";
 import StealthPlugin from "puppeteer-extra-plugin-stealth";
 import { handlePuppeteerPage } from "./handlePuppeteerPage";
+import { logger } from "../logger/logger";
 
 const stealth = StealthPlugin();
 // Remove this specific stealth plugin from the default set
@@ -13,7 +14,7 @@ export const scrapeTikTok = async () => {
   let browser = null;
 
   const scrapingStatement = `♪ Now scraping Tik Tok data! ♪`;
-  console.log(scrapingStatement);
+  logger("server").info(scrapingStatement);
 
   try {
     const args = chromium.args;
@@ -39,6 +40,6 @@ export const scrapeTikTok = async () => {
     console.error(error);
   } finally {
     if (browser !== null) await browser.close();
-    return true;
+    return "Scraping complete. Browser closed.";
   }
 };
