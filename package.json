@@ -2,9 +2,10 @@
   "name": "tiktok-puppeteer-lambda",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "app.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "ts-node app.ts",
+    "build": "tsc --build ./tsconfig.json"
   },
   "repository": {
     "type": "git",
@@ -15,5 +16,11 @@
   "bugs": {
     "url": "https://github.com/amamenko/tiktok-puppeteer-lambda/issues"
   },
-  "homepage": "https://github.com/amamenko/tiktok-puppeteer-lambda#readme"
+  "homepage": "https://github.com/amamenko/tiktok-puppeteer-lambda#readme",
+  "dependencies": {
+    "aws-lambda": "^1.0.7"
+  },
+  "devDependencies": {
+    "@types/aws-lambda": "^8.10.119"
+  }
 }
