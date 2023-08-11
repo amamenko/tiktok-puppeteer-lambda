@@ -3,6 +3,7 @@ import { format, subDays } from "date-fns";
 import { Live } from "../interfaces/live.interface";
 import { conn } from "..";
 import { logger } from "../logger/logger";
+import { getBase64 } from "./getBase64";
 
 export const handleRequestFinished = async (
   request: HTTPRequest,
@@ -85,18 +86,22 @@ export const handleRequestFinished = async (
             );
             if (matchingUser[0]) {
               // User already exists in DB
-              const { displayID, userID, avatar } = matchingUser[0];
-              if (
-                displayID !== live.user.displayID ||
-                userID !== live.user.userID ||
-                avatar !== live.user.avatar
-              ) {
-                // User in DB contains outdated data - update user
-                await User.findOneAndUpdate(matchingUserFilter, live.user);
-              }
+              const { avatar } = matchingUser[0];
+              const base64Avatar = await getBase64(avatar);
+              const modifiedUser = {
+                ...live.user,
+                avatar: base64Avatar || avatar,
+              };
+              // User in DB contains outdated data - update user
+              await User.findOneAndUpdate(matchingUserFilter, modifiedUser);
             } else {
+              const base64Avatar = await getBase64(live.user.avatar);
+              const modifiedUser = {
+                ...live.user,
+                avatar: base64Avatar || live.user.avatar,
+              };
               // User doesn't exist in DB - add new user
-              await User.create(live.user).catch((e: Error) =>
+              await User.create(modifiedUser).catch((e: Error) =>
                 console.error(e)
               );
             }
