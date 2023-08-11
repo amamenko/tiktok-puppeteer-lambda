@@ -86,8 +86,8 @@ export const handleRequestFinished = async (
             );
             if (matchingUser[0]) {
               // User already exists in DB
-              const { avatar } = matchingUser[0];
-              const base64Avatar = await getBase64(avatar);
+              const { avatar } = matchingUser[0]; // Already stored avatar
+              const base64Avatar = await getBase64(live.user.avatar);
               const modifiedUser = {
                 ...live.user,
                 avatar: base64Avatar || avatar,
