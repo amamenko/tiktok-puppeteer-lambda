@@ -34,7 +34,7 @@ export const handlePuppeteerPage = async (browser: Browser) => {
     try {
       await page.click("button.semi-button-secondary");
     } catch (e) {
-      logger("server").error("No log in button found!");
+      logger("server").error("No clear log in button found!");
     }
 
     await page.focus('input[placeholder="Enter email address"]');
@@ -42,9 +42,9 @@ export const handlePuppeteerPage = async (browser: Browser) => {
     await page.focus('input[placeholder="Enter password"]');
     await page.keyboard.type(process.env.TIK_TOK_PASSWORD);
     try {
-      await page.click("button.semi-button-tertiary.semi-button-size-large");
+      await page.click("button.semi-button-primary.semi-button-size-large");
     } catch (e) {
-      logger("server").error("No log in button found!");
+      logger("server").error("No big red log in button found!");
     }
 
     await waitForTimeout(10000);
