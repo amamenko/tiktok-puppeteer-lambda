@@ -47,13 +47,13 @@ export const handlePuppeteerPage = async (browser: Browser) => {
       logger("server").error("No big red log in button found!");
     }
 
-    await waitForTimeout(10000);
+    await waitForTimeout(5000);
 
     await page.goto("https://live-backstage.tiktok.com/portal/anchor/live", {
       waitUntil: "networkidle2",
     });
 
-    await waitForTimeout(10000);
+    await waitForTimeout(5000);
 
     // Keep clicking next button until it is disabled to trigger all paginated requests
     const isElementVisible = async (page: Page, cssSelector: string) => {
@@ -72,19 +72,10 @@ export const handlePuppeteerPage = async (browser: Browser) => {
     const cssSelector = "li:not(.semi-page-item-disabled).semi-page-next";
     let loadMoreVisible = await isElementVisible(page, cssSelector);
     while (loadMoreVisible) {
-      logger("server").info(
-        "Load more button is visible. Clicking to next page!"
-      );
-
       await page.$eval(cssSelector, (el) => el.click());
-
       const isNextElementVisible = await isElementVisible(page, cssSelector);
-      logger("server").info(
-        `Next page button is${isNextElementVisible ? " " : " not "}visible.`
-      );
       if (!isNextElementVisible) {
         loadMoreVisible = isNextElementVisible;
-        logger("server").info("No more pages!");
         break;
       }
     }
