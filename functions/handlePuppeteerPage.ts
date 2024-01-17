@@ -62,9 +62,6 @@ export const handlePuppeteerPage = async (browser: Browser) => {
       await page
         .waitForSelector(cssSelector, { visible: true, timeout: 5000 })
         .catch(() => {
-          logger("server").error(
-            "Next page button timed out. No longer visible!"
-          );
           visible = false;
         });
       return visible;
