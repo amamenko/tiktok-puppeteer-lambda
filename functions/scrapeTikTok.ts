@@ -1,5 +1,5 @@
 import "dotenv/config";
-import chromium from "chrome-aws-lambda";
+import chromium from "@sparticuz/chromium";
 import puppeteer from "puppeteer-extra";
 import StealthPlugin from "puppeteer-extra-plugin-stealth";
 import { handlePuppeteerPage } from "./handlePuppeteerPage";
@@ -19,7 +19,7 @@ export const scrapeTikTok = async () => {
   try {
     const args = chromium.args;
     const headless = chromium.headless;
-    let exec_path = await chromium.executablePath;
+    let exec_path = await chromium.executablePath();
 
     // we are running locally
     if (process.env.AWS_EXECUTION_ENV === undefined) {
