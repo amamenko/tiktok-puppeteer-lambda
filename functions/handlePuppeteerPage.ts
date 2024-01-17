@@ -60,7 +60,7 @@ export const handlePuppeteerPage = async (browser: Browser) => {
       let visible = true;
       await waitForTimeout(5000);
       await page
-        .waitForSelector(cssSelector, { visible: true, timeout: 10000 })
+        .waitForSelector(cssSelector, { visible: true, timeout: 5000 })
         .catch(() => {
           logger("server").error(
             "Next page button timed out. No longer visible!"
@@ -72,11 +72,18 @@ export const handlePuppeteerPage = async (browser: Browser) => {
     const cssSelector = "li:not(.semi-page-item-disabled).semi-page-next";
     let loadMoreVisible = await isElementVisible(page, cssSelector);
     while (loadMoreVisible) {
+      logger("server").info(
+        "Load more button is visible. Clicking to next page!"
+      );
       await page.click(cssSelector).catch(() => {
         logger("server").error("Next page button not found!");
         return;
       });
-      loadMoreVisible = await isElementVisible(page, cssSelector);
+      const isNextElementVisible = await isElementVisible(page, cssSelector);
+      logger("server").info(
+        `Next page button is${isNextElementVisible ? " not " : " "}visible.`
+      );
+      loadMoreVisible = isNextElementVisible;
     }
   } catch (e) {
     logger("server").error(`Received error during Puppeteer process: ${e}`);
