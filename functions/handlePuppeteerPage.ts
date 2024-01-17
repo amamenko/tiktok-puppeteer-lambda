@@ -75,15 +75,18 @@ export const handlePuppeteerPage = async (browser: Browser) => {
       logger("server").info(
         "Load more button is visible. Clicking to next page!"
       );
-      await page.click(cssSelector).catch(() => {
-        logger("server").error("Next page button not found!");
-        return;
-      });
+
+      await page.$eval(cssSelector, (el) => el.click());
+
       const isNextElementVisible = await isElementVisible(page, cssSelector);
       logger("server").info(
-        `Next page button is${isNextElementVisible ? " not " : " "}visible.`
+        `Next page button is${isNextElementVisible ? " " : " not "}visible.`
       );
-      loadMoreVisible = isNextElementVisible;
+      if (!isNextElementVisible) {
+        loadMoreVisible = isNextElementVisible;
+        logger("server").info("No more pages!");
+        break;
+      }
     }
   } catch (e) {
     logger("server").error(`Received error during Puppeteer process: ${e}`);
