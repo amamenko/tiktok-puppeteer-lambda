@@ -182,7 +182,7 @@ export const handleRequestFinished = async (
       }
     }
   } catch (e) {
-    console.error(e);
+    logger("server").error(e);
     return previouslyModifiedLives;
   }
 };
