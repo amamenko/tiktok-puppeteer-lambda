@@ -31,20 +31,25 @@ export const handlePuppeteerPage = async (browser: Browser) => {
 
     await waitForTimeout(5000);
 
+    // Top-right teal 'Log in' button
     try {
-      await page.click("button.semi-button-secondary");
+      await page.click("button.semi-button-primary");
     } catch (e) {
-      logger("server").error("No clear log in button found!");
+      logger("server").error("No teal log in button found!");
     }
 
     await page.focus('input[placeholder="Enter email address"]');
     await page.keyboard.type(process.env.TIK_TOK_EMAIL);
     await page.focus('input[placeholder="Enter password"]');
     await page.keyboard.type(process.env.TIK_TOK_PASSWORD);
+
+    // Large 'Log in' button on the bottom of form
     try {
-      await page.click("button.semi-button-primary.semi-button-size-large");
+      await page.click(
+        "button.semi-button.semi-button-primary.semi-button-size-large.semi-button-block"
+      );
     } catch (e) {
-      logger("server").error("No big red log in button found!");
+      logger("server").error("No big teal log in button found!");
     }
 
     await waitForTimeout(5000);
