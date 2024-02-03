@@ -53,6 +53,12 @@ export const setCurrentTop100Lives = async () => {
       weekStarting: previousWeekStart,
     });
 
+    console.log({
+      previousWeekStart,
+      foundPreviousWeekDoc,
+      topHundredLives,
+    });
+
     const foundPreviousWeekTop100Lives = foundPreviousWeekDoc?.lives || [];
     const topHundredLivesUnixUpdated = topHundredLives.map((live) => {
       const foundPreviousWeekRank = foundPreviousWeekTop100Lives?.findIndex(
