@@ -13,6 +13,7 @@ export const currentTop100LivesSchema = new mongoose.Schema(
         roomID: String,
         userID: String,
         diamonds: Number,
+        avatar: String,
         createdAt: Date,
       },
     ],
