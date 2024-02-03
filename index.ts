@@ -3,6 +3,8 @@ import { Context, APIGatewayProxyCallback } from "aws-lambda";
 import mongoose from "mongoose";
 import { userSchema } from "./models/User";
 import { dailyLiveSchema } from "./models/DailyLive";
+import { previousWeekTop100Schema } from "./models/PreviousWeekTop100";
+import { currentTop100LivesSchema } from "./models/CurrentTop100Lives";
 import { scrapeTikTok } from "./functions/scrapeTikTok";
 
 export let conn = null;
@@ -24,6 +26,8 @@ export const handler = async (
     await conn.asPromise();
     conn.model("DailyLive", dailyLiveSchema);
     conn.model("User", userSchema);
+    conn.model("PreviousWeekTop100", previousWeekTop100Schema);
+    conn.model("CurrentTop100Lives", currentTop100LivesSchema);
   }
 
   return await scrapeTikTok();

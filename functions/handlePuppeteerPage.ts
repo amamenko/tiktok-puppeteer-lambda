@@ -2,6 +2,7 @@ import { handleRequestFinished } from "./handleRequestFinished";
 import { waitForTimeout } from "./waitForTimeout";
 import { Browser, HTTPRequest, Page } from "puppeteer-core";
 import { logger } from "../logger/logger";
+import { setCurrentTop100Lives } from "./setCurrentTop100Lives";
 
 export const handlePuppeteerPage = async (browser: Browser) => {
   try {
@@ -87,5 +88,9 @@ export const handlePuppeteerPage = async (browser: Browser) => {
     // ALWAYS make sure Puppeteer closes the browser when finished regardless of success or error
     await browser.close();
     logger("server").info("Scraping complete. Browser closed.");
+
+    // Then update the current top 100 lives based on new data
+    await setCurrentTop100Lives();
+    logger("server").info("Finished updating current top 100 lives.");
   }
 };
