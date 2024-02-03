@@ -7,6 +7,7 @@ export const previousWeekTop100Schema = new mongoose.Schema(
     updatedAt: Number,
     lives: [
       {
+        _id: String,
         displayID: String,
         userID: String,
         diamonds: Number,
