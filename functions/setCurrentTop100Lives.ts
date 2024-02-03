@@ -67,9 +67,7 @@ export const setCurrentTop100Lives = async () => {
     });
 
     const weekEndsOnDateUnix = getUnixTime(addDays(weekStartsOnDate, 7)) * 1000;
-    const dailyLiveGen = await DailyLive.find({ date: formattedCurrentDate })
-      .project({ date: 1, updatedAt: 1 })
-      .toArray();
+    const dailyLiveGen = await DailyLive.find({ date: formattedCurrentDate });
 
     const responseObj = {
       weekStarting: weekStartsOnFormatted,
