@@ -45,7 +45,7 @@ export const setCurrentTop100Lives = async () => {
           updatedAt: { $last: "$userInfo.updatedAt" },
         },
       },
-    ]).toArray()) as LiveWithId[];
+    ])) as LiveWithId[];
     dailyLiveLives.sort((a, b) => Number(b.diamonds) - Number(a.diamonds));
     const topHundredLives = dailyLiveLives.slice(0, 100);
     const previousWeekStart = getWeekStart(1);
