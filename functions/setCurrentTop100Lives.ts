@@ -47,6 +47,24 @@ export const setCurrentTop100Lives = async () => {
       },
     ])) as LiveWithId[];
     dailyLiveLives.sort((a, b) => Number(b.diamonds) - Number(a.diamonds));
+    if (process.env.EXCLUDED_USER_IDS) {
+      try {
+        const parsedExcludedUserIds = JSON.parse(process.env.EXCLUDED_USER_IDS);
+        if (
+          Array.isArray(parsedExcludedUserIds) &&
+          parsedExcludedUserIds.length > 0
+        ) {
+          parsedExcludedUserIds.forEach((excludedUserId: string) => {
+            const index = dailyLiveLives.findIndex(
+              (live) => live.userID === excludedUserId
+            );
+            if (index > -1) dailyLiveLives.splice(index, 1);
+          });
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    }
     const topHundredLives = dailyLiveLives.slice(0, 100);
     const previousWeekStart = getWeekStart(1);
     const foundPreviousWeekDoc = await PreviousWeekTop100.findOne({
