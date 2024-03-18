@@ -77,95 +77,105 @@ export const handleRequestFinished = async (
             ? oldLiveData[0].lives
             : [];
           const oldRoomIDs = liveDataArr.map((live: Live) => live.roomID);
-          for (const live of allLiveResults) {
-            const matchingUserFilter = {
-              userID: live.user.userID,
-            };
-            const matchingUser = await User.find(matchingUserFilter).catch(
-              (e: Error) => console.error(e)
-            );
-            if (matchingUser[0]) {
-              // User already exists in DB
-              const { avatar } = matchingUser[0]; // Already stored avatar
-              const base64Avatar = await getBase64(live.user.avatar);
-              const modifiedUser = {
-                ...live.user,
-                avatar: base64Avatar || avatar,
-              };
-              // User in DB contains outdated data - update user
-              await User.findOneAndUpdate(matchingUserFilter, modifiedUser);
-            } else {
-              const base64Avatar = await getBase64(live.user.avatar);
-              const modifiedUser = {
-                ...live.user,
-                avatar: base64Avatar || live.user.avatar,
-              };
-              // User doesn't exist in DB - add new user
-              await User.create(modifiedUser).catch((e: Error) =>
-                console.error(e)
-              );
-            }
 
-            const handleYesterdayMatch = () => {
-              const foundYesterdayLive = yesterdayLiveDataArr.find(
-                (el: Live) => el.roomID === live.roomID
+          await Promise.allSettled(
+            allLiveResults.map(async (live) => {
+              const matchingUserFilter = {
+                userID: live.user.userID,
+              };
+              const matchingUser = await User.find(matchingUserFilter).catch(
+                (e: Error) => console.error(e)
               );
-              if (foundYesterdayLive) {
-                const newCurrentLive = {
-                  roomID: live.roomID,
-                  userID: live.user.userID,
-                  diamonds:
-                    live.diamonds - Number(foundYesterdayLive.diamonds) >= 0
-                      ? live.diamonds - Number(foundYesterdayLive.diamonds)
-                      : 0,
-                  updatedAt: new Date(),
-                  createdAt: new Date(),
+              if (matchingUser[0]) {
+                // User already exists in DB
+                const { avatar } = matchingUser[0]; // Already stored avatar
+                const base64Avatar = await getBase64(live.user.avatar);
+                const modifiedUser = {
+                  ...live.user,
+                  avatar: base64Avatar || avatar,
                 };
-                return newCurrentLive;
-              }
-              return;
-            };
-            if (!oldRoomIDs.includes(live.roomID)) {
-              // This live did not start today
-              if (yesterdayRoomIDs.includes(live.roomID)) {
-                // Live started yesterday
-                const newLiveObj = handleYesterdayMatch();
-                liveDataArr.push(newLiveObj);
+                // User in DB contains outdated data - update user
+                await User.findOneAndUpdate(matchingUserFilter, modifiedUser);
               } else {
-                // This is a new live
-                const modifiedLive = {
-                  roomID: live.roomID,
-                  userID: live.user.userID,
-                  diamonds: live.diamonds,
-                  updatedAt: new Date(),
-                  createdAt: new Date(),
+                const base64Avatar = await getBase64(live.user.avatar);
+                const modifiedUser = {
+                  ...live.user,
+                  avatar: base64Avatar || live.user.avatar,
                 };
-                liveDataArr.push(modifiedLive);
+                // User doesn't exist in DB - add new user
+                await User.create(modifiedUser).catch((e: Error) =>
+                  console.error(e)
+                );
               }
-            } else {
-              const foundIndex = liveDataArr.findIndex(
-                (el: Live) => el.roomID === live.roomID
-              );
-              if (foundIndex >= 0) {
+
+              const handleYesterdayMatch = () => {
+                const foundYesterdayLive = yesterdayLiveDataArr.find(
+                  (el: Live) => el.roomID === live.roomID
+                );
+                if (foundYesterdayLive) {
+                  const newCurrentLive = {
+                    roomID: live.roomID,
+                    userID: live.user.userID,
+                    diamonds:
+                      live.diamonds - Number(foundYesterdayLive.diamonds) >= 0
+                        ? live.diamonds - Number(foundYesterdayLive.diamonds)
+                        : 0,
+                    updatedAt: new Date(),
+                    createdAt: new Date(),
+                  };
+                  return newCurrentLive;
+                }
+                return;
+              };
+
+              if (!oldRoomIDs.includes(live.roomID)) {
+                // This live did not start today
                 if (yesterdayRoomIDs.includes(live.roomID)) {
                   // Live started yesterday
                   const newLiveObj = handleYesterdayMatch();
-                  liveDataArr[foundIndex] = newLiveObj;
+                  liveDataArr.push(newLiveObj);
+                  return newLiveObj;
                 } else {
-                  const oldObj = liveDataArr[foundIndex];
-                  // Update known live
+                  // This is a new live
                   const modifiedLive = {
                     roomID: live.roomID,
                     userID: live.user.userID,
                     diamonds: live.diamonds,
                     updatedAt: new Date(),
-                    createdAt: oldObj.createdAt,
+                    createdAt: new Date(),
                   };
-                  liveDataArr[foundIndex] = modifiedLive;
+                  liveDataArr.push(modifiedLive);
+                  return modifiedLive;
                 }
+              } else {
+                const foundIndex = liveDataArr.findIndex(
+                  (el: Live) => el.roomID === live.roomID
+                );
+                if (foundIndex >= 0) {
+                  if (yesterdayRoomIDs.includes(live.roomID)) {
+                    // Live started yesterday
+                    const newLiveObj = handleYesterdayMatch();
+                    liveDataArr[foundIndex] = newLiveObj;
+                    return newLiveObj;
+                  } else {
+                    const oldObj = liveDataArr[foundIndex];
+                    // Update known live
+                    const modifiedLive = {
+                      roomID: live.roomID,
+                      userID: live.user.userID,
+                      diamonds: live.diamonds,
+                      updatedAt: new Date(),
+                      createdAt: oldObj.createdAt,
+                    };
+                    liveDataArr[foundIndex] = modifiedLive;
+                    return modifiedLive;
+                  }
+                }
+                return undefined;
               }
-            }
-          }
+            })
+          );
+
           const liveDateFilter = { date: today };
           const liveDataUpdate = {
             date: today,
@@ -179,8 +189,11 @@ export const handleRequestFinished = async (
           logger("server").info(successStatement);
           return allLiveResults.length;
         }
+        return undefined;
       }
+      return undefined;
     }
+    return undefined;
   } catch (e) {
     logger("server").error(e);
     return previouslyModifiedLives;
