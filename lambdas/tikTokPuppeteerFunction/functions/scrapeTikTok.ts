@@ -1,4 +1,4 @@
-import "../lambdas/tikTokPuppeteerFunction/node_modules/dotenv/config";
+import "../node_modules/dotenv/config";
 import chromium from "@sparticuz/chromium";
 import puppeteer from "puppeteer-extra";
 import StealthPlugin from "puppeteer-extra-plugin-stealth";
@@ -35,7 +35,7 @@ export const scrapeTikTok = async () => {
       executablePath: exec_path,
       headless,
     });
-    await handlePuppeteerPage(browser);
+    return await handlePuppeteerPage(browser);
   } catch (error) {
     logger("server").error(error);
   } finally {
