@@ -1,4 +1,4 @@
-import "dotenv/config";
+import "../lambdas/tikTokPuppeteerFunction/node_modules/dotenv/config";
 import chromium from "@sparticuz/chromium";
 import puppeteer from "puppeteer-extra";
 import StealthPlugin from "puppeteer-extra-plugin-stealth";

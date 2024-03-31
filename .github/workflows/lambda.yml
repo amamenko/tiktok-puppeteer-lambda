@@ -21,15 +21,15 @@ jobs:
       - name: Login to Amazon ECR
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
-      - name: Build, tag, and push image to Amazon ECR
+      - name: Build, tag, and push tikTokPuppeteerFunction image to Amazon ECR
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           ECR_REPOSITORY: tiktok_puppeteer
           IMAGE_TAG: latest
         run: |
-          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG ./lambdas/tikTokPuppeteerFunction/.
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
-      - name: Deploy Lambda function from Amazon ECR image
+      - name: Deploy tikTokPuppeteerFunction Lambda function from Amazon ECR image
         uses: appleboy/lambda-action@v0.1.9
         with:
           aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
@@ -37,3 +37,19 @@ jobs:
           aws_region: ${{ secrets.AWS_REGION }}
           function_name: tikTokPuppeteerFunction
           image_uri: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/tiktok_puppeteer:latest
+      - name: Build, tag, and push setCurrentTop100LivesFunction image to Amazon ECR
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          ECR_REPOSITORY: set_current_top_100_lives
+          IMAGE_TAG: latest
+        run: |
+          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG ./lambdas/setCurrentTop100Lives/.
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+      - name: Deploy setCurrentTop100LivesFunction Lambda function from Amazon ECR image
+        uses: appleboy/lambda-action@v0.1.9
+        with:
+          aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws_region: ${{ secrets.AWS_REGION }}
+          function_name: setCurrentTop100LivesFunction
+          image_uri: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/set_current_top_100_lives:latest

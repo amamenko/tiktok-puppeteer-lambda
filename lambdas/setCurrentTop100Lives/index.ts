@@ -1,11 +1,11 @@
 import "dotenv/config";
 import { Context, APIGatewayProxyCallback } from "aws-lambda";
 import mongoose from "mongoose";
-import { userSchema } from "./models/User";
 import { dailyLiveSchema } from "./models/DailyLive";
 import { previousWeekTop100Schema } from "./models/PreviousWeekTop100";
 import { currentTop100LivesSchema } from "./models/CurrentTop100Lives";
-import { scrapeTikTok } from "./functions/scrapeTikTok";
+import { setCurrentTop100Lives } from "./functions/setCurrentTop100Lives";
+import { logger } from "./logger/logger";
 
 export let conn = null;
 
@@ -25,10 +25,16 @@ export const handler = async (
 
     await conn.asPromise();
     conn.model("DailyLive", dailyLiveSchema);
-    conn.model("User", userSchema);
     conn.model("PreviousWeekTop100", previousWeekTop100Schema);
     conn.model("CurrentTop100Lives", currentTop100LivesSchema);
   }
 
-  return await scrapeTikTok();
+  try {
+    await setCurrentTop100Lives();
+    logger("server").info("Finished updating current top 100 lives.");
+    return true;
+  } catch {
+    logger("server").error("Error while updating current top 100 lives.");
+    return false;
+  }
 };

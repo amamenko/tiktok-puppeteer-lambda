@@ -1,5 +1,5 @@
 import { format, startOfWeek, addDays, subDays } from "date-fns";
-import "dotenv/config";
+import "../lambdas/setCurrentTop100Lives/node_modules/dotenv/config";
 
 export const getDateBoundaries = (weeksAgo?: number) => {
   const beginningDay = weeksAgo

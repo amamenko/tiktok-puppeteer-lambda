@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "target": "es6",
+    "esModuleInterop": true,
+    "noImplicitThis": false,
+    "outDir": "./dist",
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true
+  },
+  "include": ["functions/**/*.ts", "index.ts"],
+  "exclude": ["node_modules", "build.js"]
+}
