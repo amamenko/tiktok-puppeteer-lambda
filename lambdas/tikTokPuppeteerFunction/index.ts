@@ -5,7 +5,7 @@ import { userSchema } from "./models/User";
 import { dailyLiveSchema } from "./models/DailyLive";
 import { previousWeekTop100Schema } from "./models/PreviousWeekTop100";
 import { currentTop100LivesSchema } from "./models/CurrentTop100Lives";
-import { scrapeTikTok } from "../../functions/scrapeTikTok";
+import { scrapeTikTok } from "./functions/scrapeTikTok";
 
 export let conn = null;
 
