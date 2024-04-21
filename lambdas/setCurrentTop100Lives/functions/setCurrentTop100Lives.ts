@@ -79,7 +79,8 @@ export const setCurrentTop100Lives = async () => {
 
       return {
         ...live,
-        updatedAt: getUnixTime(live.updatedAt) * 1000,
+        updatedAt:
+          getUnixTime(live.updatedAt || new Date()) * 1000 || Date.now(),
         lastWeekRank:
           foundPreviousWeekRank === undefined ? -1 : foundPreviousWeekRank,
       };
@@ -92,7 +93,9 @@ export const setCurrentTop100Lives = async () => {
       weekStarting: weekStartsOnFormatted,
       refreshAt: weekEndsOnDateUnix,
       lives: topHundredLivesUnixUpdated,
-      updatedAt: getUnixTime(dailyLiveGen[0]?.updatedAt) * 1000,
+      updatedAt:
+        getUnixTime(dailyLiveGen[0]?.updatedAt || new Date()) * 1000 ||
+        Date.now(),
     };
 
     // Compare to today's previous live data
