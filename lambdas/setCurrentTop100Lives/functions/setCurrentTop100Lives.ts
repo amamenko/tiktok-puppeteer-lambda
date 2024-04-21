@@ -46,7 +46,6 @@ export const setCurrentTop100Lives = async () => {
         },
       },
     ])) as LiveWithId[];
-    console.log({ dailyLiveLives });
     dailyLiveLives.sort((a, b) => Number(b.diamonds) - Number(a.diamonds));
     if (process.env.EXCLUDED_USER_IDS) {
       try {
@@ -89,7 +88,6 @@ export const setCurrentTop100Lives = async () => {
 
     const weekEndsOnDateUnix = getUnixTime(addDays(weekStartsOnDate, 7)) * 1000;
     const dailyLiveGen = await DailyLive.find({ date: formattedCurrentDate });
-    console.log({ topHundredLivesUnixUpdated });
     const responseObj = {
       weekStarting: weekStartsOnFormatted,
       refreshAt: weekEndsOnDateUnix,
