@@ -9,7 +9,6 @@ export const handlePuppeteerPage = async (browser: Browser) => {
 
     logger("server").info(`Setting Puppeteer configuration settings`);
 
-    await page.setRequestInterception(true);
     await page.setViewport({
       width: 600,
       height: 813,
@@ -25,7 +24,6 @@ export const handlePuppeteerPage = async (browser: Browser) => {
         totalUpdatedLives
       );
       if (modifiedLives) totalUpdatedLives += modifiedLives;
-      request.continue();
     });
 
     logger("server").info(`Navigating to TikTok LIVE Backstage portal... 🚀`);
