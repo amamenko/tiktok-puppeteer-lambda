@@ -58,6 +58,10 @@ export const handlePuppeteerPage = async (browser: Browser) => {
       waitUntil: "networkidle2",
     });
 
+    logger("server").info(
+      `Successfully navigated to the TikTok LIVE Backstage portal! 🎉`
+    );
+
     await waitForTimeout(2000);
 
     // Keep clicking next button until it is disabled to trigger all paginated requests
