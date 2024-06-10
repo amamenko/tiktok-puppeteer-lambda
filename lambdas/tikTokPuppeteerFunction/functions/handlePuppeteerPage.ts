@@ -67,22 +67,20 @@ export const handlePuppeteerPage = async (browser: Browser) => {
       `Successfully navigated to the TikTok LIVE Backstage portal! 🎉`
     );
 
-    await waitForTimeout(2000);
+    await waitForTimeout(5000);
 
     // Keep clicking next button until it is disabled to trigger all paginated requests
     const isElementVisible = async (page: Page, cssSelector: string) => {
-      logger("server").info(
-        `Checking if the next page (${page}) is visible...`
-      );
+      logger("server").info(`Checking if the next page is visible...`);
       let visible = true;
-      await waitForTimeout(2000);
+      await waitForTimeout(5000);
       await page
-        .waitForSelector(cssSelector, { visible: true, timeout: 2000 })
+        .waitForSelector(cssSelector, { visible: true, timeout: 5000 })
         .catch(() => {
           visible = false;
         });
       logger("server").info(
-        `The next page (${page}) is ${visible ? "visible" : "NOT visible"}!`
+        `The next page is ${visible ? "visible" : "NOT visible"}!`
       );
       return visible;
     };
