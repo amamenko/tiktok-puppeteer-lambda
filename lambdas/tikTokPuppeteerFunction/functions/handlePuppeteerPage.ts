@@ -62,7 +62,9 @@ export const handlePuppeteerPage = async (browser: Browser) => {
 
     // Keep clicking next button until it is disabled to trigger all paginated requests
     const isElementVisible = async (page: Page, cssSelector: string) => {
-      console.log(`Checking if the next page (${page}) is visible...`);
+      logger("server").info(
+        `Checking if the next page (${page}) is visible...`
+      );
       let visible = true;
       await waitForTimeout(2000);
       await page
@@ -70,7 +72,7 @@ export const handlePuppeteerPage = async (browser: Browser) => {
         .catch(() => {
           visible = false;
         });
-      console.log(
+      logger("server").info(
         `The next page (${page}) is ${visible ? "visible" : "NOT visible"}!`
       );
       return visible;
