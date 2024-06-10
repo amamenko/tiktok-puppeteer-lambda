@@ -6,6 +6,9 @@ import { logger } from "../logger/logger";
 export const handlePuppeteerPage = async (browser: Browser) => {
   try {
     const page = await browser.newPage();
+
+    logger("server").info(`Setting Puppeteer configuration settings`);
+
     await page.setRequestInterception(true);
     await page.setViewport({
       width: 600,
@@ -24,6 +27,8 @@ export const handlePuppeteerPage = async (browser: Browser) => {
       if (modifiedLives) totalUpdatedLives += modifiedLives;
       request.continue();
     });
+
+    logger("server").info(`Navigating to TikTok LIVE Backstage portal... 🚀`);
 
     await page.goto("https://live-backstage.tiktok.com/login?loginType=email", {
       waitUntil: "networkidle2",
