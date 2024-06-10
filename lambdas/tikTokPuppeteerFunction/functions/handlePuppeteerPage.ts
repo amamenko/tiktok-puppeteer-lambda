@@ -8,8 +8,8 @@ export const handlePuppeteerPage = async (browser: Browser) => {
     const page = await browser.newPage();
 
     await page.setViewport({
-      width: 1920,
-      height: 1080,
+      width: 600,
+      height: 813,
     });
 
     // Configure the navigation timeout
@@ -29,7 +29,7 @@ export const handlePuppeteerPage = async (browser: Browser) => {
       waitUntil: "networkidle2",
     });
 
-    await waitForTimeout(5000);
+    await waitForTimeout(2000);
 
     // Top-right teal 'Log in' button
     try {
@@ -52,23 +52,28 @@ export const handlePuppeteerPage = async (browser: Browser) => {
       logger("server").error("No big teal log in button found!");
     }
 
-    await waitForTimeout(5000);
+    await waitForTimeout(2000);
 
     await page.goto("https://live-backstage.tiktok.com/portal/anchor/live", {
       waitUntil: "networkidle2",
     });
 
-    await waitForTimeout(5000);
+    await waitForTimeout(2000);
 
     // Keep clicking next button until it is disabled to trigger all paginated requests
     const isElementVisible = async (page: Page, cssSelector: string) => {
       let visible = true;
-      await waitForTimeout(5000);
+      await waitForTimeout(2000);
       await page
-        .waitForSelector(cssSelector, { visible: true, timeout: 5000 })
+        .waitForSelector(cssSelector, { visible: true, timeout: 2000 })
         .catch(() => {
           visible = false;
         });
+      console.log(
+        `The next page is ${page}. It is ${
+          visible ? "visible" : "not visible"
+        }.`
+      );
       return visible;
     };
     const cssSelector = "li:not(.semi-page-item-disabled).semi-page-next";
