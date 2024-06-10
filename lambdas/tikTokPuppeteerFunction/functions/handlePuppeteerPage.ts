@@ -6,12 +6,11 @@ import { logger } from "../logger/logger";
 export const handlePuppeteerPage = async (browser: Browser) => {
   try {
     const page = await browser.newPage();
-
+    await page.setRequestInterception(true);
     await page.setViewport({
       width: 600,
       height: 813,
     });
-
     // Configure the navigation timeout
     page.setDefaultNavigationTimeout(0);
 
@@ -23,6 +22,7 @@ export const handlePuppeteerPage = async (browser: Browser) => {
         totalUpdatedLives
       );
       if (modifiedLives) totalUpdatedLives += modifiedLives;
+      request.continue();
     });
 
     await page.goto("https://live-backstage.tiktok.com/login?loginType=email", {
@@ -37,6 +37,10 @@ export const handlePuppeteerPage = async (browser: Browser) => {
     } catch (e) {
       logger("server").error("No teal log in button found!");
     }
+
+    logger("server").info(
+      `Entering login credentials for TikTok LIVE Backstage portal... 🕵️‍♂️`
+    );
 
     await page.focus('input[placeholder="Enter email address"]');
     await page.keyboard.type(process.env.TIK_TOK_EMAIL);

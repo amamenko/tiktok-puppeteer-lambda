@@ -40,6 +40,8 @@ export const scrapeTikTok = async () => {
     logger("server").error(error);
   } finally {
     if (browser !== null) await browser.close();
-    return "Scraping complete. Browser closed.";
+    const scrapingCompleteStatement = "Scraping complete. Browser closed.";
+    logger("server").info(scrapingCompleteStatement);
+    return scrapingCompleteStatement;
   }
 };
