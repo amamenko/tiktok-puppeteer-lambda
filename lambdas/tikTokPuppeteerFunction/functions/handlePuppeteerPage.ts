@@ -61,7 +61,9 @@ export const handlePuppeteerPage = async (browser: Browser) => {
 
     await waitForTimeout(2000);
 
-    await page.goto("https://live-backstage.tiktok.com/portal/anchor/live");
+    await page.goto(
+      "https://live-backstage.tiktok.com/portal/anchor/live?tab=liveRoom"
+    );
 
     logger("server").info(
       `Successfully navigated to the TikTok LIVE Backstage portal! 🎉`
@@ -71,7 +73,6 @@ export const handlePuppeteerPage = async (browser: Browser) => {
 
     // Keep clicking next button until it is disabled to trigger all paginated requests
     const isElementVisible = async (page: Page, cssSelector: string) => {
-      logger("server").info(`Checking if the next page is visible...`);
       let visible = true;
       await waitForTimeout(5000);
       await page
@@ -79,9 +80,6 @@ export const handlePuppeteerPage = async (browser: Browser) => {
         .catch(() => {
           visible = false;
         });
-      logger("server").info(
-        `The next page is ${visible ? "visible" : "NOT visible"}!`
-      );
       return visible;
     };
     const cssSelector = "li:not(.semi-page-item-disabled).semi-page-next";
