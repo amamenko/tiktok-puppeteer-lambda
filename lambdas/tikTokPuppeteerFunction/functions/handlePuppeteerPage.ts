@@ -10,8 +10,8 @@ export const handlePuppeteerPage = async (browser: Browser) => {
     logger("server").info(`Setting Puppeteer configuration settings`);
 
     await page.setViewport({
-      width: 600,
-      height: 813,
+      width: 1280,
+      height: 720,
     });
     // Configure the navigation timeout
     page.setDefaultNavigationTimeout(0);
@@ -84,6 +84,7 @@ export const handlePuppeteerPage = async (browser: Browser) => {
     };
     const cssSelector = "li:not(.semi-page-item-disabled).semi-page-next";
     let loadMoreVisible = await isElementVisible(page, cssSelector);
+    logger("server").info("Load more button is visible!");
     while (loadMoreVisible) {
       await page.$eval(cssSelector, (el) => el.click());
       const isNextElementVisible = await isElementVisible(page, cssSelector);
