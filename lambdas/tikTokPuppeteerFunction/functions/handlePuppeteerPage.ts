@@ -86,7 +86,9 @@ export const handlePuppeteerPage = async (browser: Browser) => {
     let loadMoreVisible = await isElementVisible(page, cssSelector);
     logger("server").info("Load more button is visible!");
     while (loadMoreVisible) {
+      logger("server").info("About to click button!");
       await page.$eval(cssSelector, (el) => el.click());
+      logger("server").info("Clicked next button!");
       const isNextElementVisible = await isElementVisible(page, cssSelector);
       logger("server").info(
         `Clicked next button! Next page is ${
