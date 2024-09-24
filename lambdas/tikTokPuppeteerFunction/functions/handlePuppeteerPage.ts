@@ -87,6 +87,11 @@ export const handlePuppeteerPage = async (browser: Browser) => {
     while (loadMoreVisible) {
       await page.$eval(cssSelector, (el) => el.click());
       const isNextElementVisible = await isElementVisible(page, cssSelector);
+      logger("server").info(
+        `Clicked next button! Next page is ${
+          isNextElementVisible ? "visible" : "not visible"
+        }.`
+      );
       if (!isNextElementVisible) {
         loadMoreVisible = isNextElementVisible;
         break;

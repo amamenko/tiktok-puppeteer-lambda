@@ -14,6 +14,7 @@ export const handleRequestFinished = async (
   try {
     const response = request.response();
     if (request.url().includes("get_live_anchor_list")) {
+      logger("server").info("Request URL: ", request.url());
       const data = await response.json();
       const totalLives = data?.data?.inLiveAmount || 0;
       if (data && data.data && data.data.inLiveAmount) {
