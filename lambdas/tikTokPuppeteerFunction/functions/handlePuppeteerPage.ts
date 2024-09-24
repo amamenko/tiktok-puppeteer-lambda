@@ -69,7 +69,7 @@ export const handlePuppeteerPage = async (browser: Browser) => {
       `Successfully navigated to the TikTok LIVE Backstage portal! 🎉`
     );
 
-    await waitForTimeout(5000);
+    await waitForTimeout(10000);
 
     // Keep clicking next button until it is disabled to trigger all paginated requests
     const isElementVisible = async (page: Page, cssSelector: string) => {
@@ -84,7 +84,9 @@ export const handlePuppeteerPage = async (browser: Browser) => {
     };
     const cssSelector = "li:not(.semi-page-item-disabled).semi-page-next";
     let loadMoreVisible = await isElementVisible(page, cssSelector);
-    logger("server").info("Load more button is visible!");
+    logger("server").info(
+      `Load more button is ${loadMoreVisible ? "visible" : "not visible"}!`
+    );
     while (loadMoreVisible) {
       logger("server").info("About to click button!");
       await page.$eval(cssSelector, (el) => el.click());
