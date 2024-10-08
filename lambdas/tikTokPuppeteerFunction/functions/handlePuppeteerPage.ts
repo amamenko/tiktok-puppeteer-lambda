@@ -6,6 +6,9 @@ import { logger } from "../logger/logger";
 export const handlePuppeteerPage = async (browser: Browser) => {
   try {
     const page = await browser.newPage();
+    const isLocal =
+      process.env.AWS_EXECUTION_ENV === undefined ||
+      process.env.ENVIRONMENT === "local";
 
     logger("server").info(`Setting Puppeteer configuration settings`);
 
@@ -69,7 +72,17 @@ export const handlePuppeteerPage = async (browser: Browser) => {
       `Successfully navigated to the TikTok LIVE Backstage portal! 🎉`
     );
 
+    if (isLocal)
+      await page.screenshot({
+        path: `tiktok-live-backstage-portal.jpg`,
+      });
+
     await waitForTimeout(10000);
+
+    if (isLocal)
+      await page.screenshot({
+        path: `tiktok-live-backstage-portal2.jpg`,
+      });
 
     // Keep clicking next button until it is disabled to trigger all paginated requests
     const isElementVisible = async (page: Page, cssSelector: string) => {
@@ -84,6 +97,12 @@ export const handlePuppeteerPage = async (browser: Browser) => {
     };
     const cssSelector = "li:not(.semi-page-item-disabled).semi-page-next";
     let loadMoreVisible = await isElementVisible(page, cssSelector);
+
+    if (isLocal)
+      await page.screenshot({
+        path: `tiktok-live-backstage-portal3.jpg`,
+      });
+
     logger("server").info(
       `Load more button is ${loadMoreVisible ? "visible" : "not visible"}!`
     );

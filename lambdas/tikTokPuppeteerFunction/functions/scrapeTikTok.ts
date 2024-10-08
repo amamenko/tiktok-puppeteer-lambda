@@ -12,6 +12,9 @@ puppeteer.use(stealth);
 
 export const scrapeTikTok = async () => {
   let browser = null;
+  const isLocal =
+    process.env.AWS_EXECUTION_ENV === undefined ||
+    process.env.ENVIRONMENT === "local";
 
   const scrapingStatement = `♪ Now scraping Tik Tok data! ♪`;
   logger("server").info(scrapingStatement);
@@ -22,12 +25,12 @@ export const scrapeTikTok = async () => {
     let exec_path = await chromium.executablePath();
 
     // we are running locally
-    if (process.env.AWS_EXECUTION_ENV === undefined) {
-      exec_path = process.env.LOCAL_CHROMIUM;
-    }
+    if (isLocal) exec_path = process.env.LOCAL_CHROMIUM;
 
     browser = await puppeteer.launch({
-      args: [...args, "--window-size=1280,720", "--disable-dev-shm-usage"],
+      args: isLocal
+        ? []
+        : [...args, "--window-size=1280,720", "--disable-dev-shm-usage"],
       defaultViewport: {
         width: 1280,
         height: 720,
@@ -35,6 +38,7 @@ export const scrapeTikTok = async () => {
       executablePath: exec_path,
       headless,
     });
+
     return await handlePuppeteerPage(browser);
   } catch (error) {
     logger("server").error(error);
