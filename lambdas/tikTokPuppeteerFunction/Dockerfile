@@ -10,11 +10,11 @@ FROM public.ecr.aws/lambda/nodejs:18
 
 # Install xvfb and related dependencies
 RUN yum install -y \
+    xorg-x11-utils \
     xorg-x11-server-Xvfb \
     xorg-x11-xauth \
     xorg-x11-fonts-75dpi \
     xorg-x11-fonts-100dpi \
-    xorg-x11-utils \
     xorg-x11-fonts-cyrillic \
     alsa-lib \
     && yum clean all
