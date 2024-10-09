@@ -17,6 +17,7 @@ export const writeScreenshotToS3 = async ({
   page,
   filePath,
 }: WriteScreenshotParams) => {
+  const isDebug = process.env.DEBUG;
   const bucketName = "scraper-debug";
   const client = new S3Client({
     region: "us-east-1",
@@ -28,7 +29,7 @@ export const writeScreenshotToS3 = async ({
 
   const timestamp = Date.now();
   const dateTime = format(timestamp, "MMddyyyy_HH:mm:ss");
-  const fileName = `${filePath}_${dateTime}.jpg`;
+  const fileName = `${isDebug ? "/tmp/" : ""}${filePath}_${dateTime}.jpg`;
 
   await page.screenshot({
     path: fileName,

@@ -5,7 +5,7 @@
   "main": "index",
   "scripts": {
     "dev": "ENVIRONMENT=local ts-node local.ts",
-    "start": "DEBUG=true ts-node index.ts",
+    "start": "ts-node index.ts",
     "build": "tsc --build ./tsconfig.json"
   },
   "repository": {
