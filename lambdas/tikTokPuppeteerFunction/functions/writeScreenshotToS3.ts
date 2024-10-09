@@ -5,11 +5,11 @@ import {
 } from "@aws-sdk/client-s3";
 import { format } from "date-fns";
 import { readFile } from "fs/promises";
-import { Page } from "puppeteer-core";
 import { logger } from "../logger/logger";
+import { PageWithCursor } from "puppeteer-real-browser";
 
 interface WriteScreenshotParams {
-  page: Page;
+  page: PageWithCursor;
   filePath: string;
 }
 

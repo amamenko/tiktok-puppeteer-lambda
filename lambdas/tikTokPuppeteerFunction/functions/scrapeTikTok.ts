@@ -1,8 +1,9 @@
 import "../node_modules/dotenv/config";
 import chromium from "@sparticuz/chromium";
-import puppeteer from "puppeteer";
+import { Browser } from "puppeteer";
 import { handlePuppeteerPage } from "./handlePuppeteerPage";
 import { logger } from "../logger/logger";
+import { connect } from "puppeteer-real-browser";
 
 export const scrapeTikTok = async () => {
   let browser = null;
@@ -15,25 +16,32 @@ export const scrapeTikTok = async () => {
 
   try {
     const args = chromium.args;
-    const headless = chromium.headless;
+    const headless = !!chromium.headless;
     let exec_path = await chromium.executablePath();
 
     // we are running locally
     if (isLocal) exec_path = process.env.LOCAL_CHROMIUM;
 
-    browser = await puppeteer.launch({
+    const { browser, page } = await connect({
+      headless,
       args: isLocal
         ? []
         : [...args, "--window-size=1280,720", "--disable-dev-shm-usage"],
-      defaultViewport: {
-        width: 1280,
-        height: 720,
+      customConfig: {
+        chromePath: exec_path,
       },
-      executablePath: exec_path,
-      headless,
+      turnstile: true,
+      connectOption: {
+        defaultViewport: {
+          width: 1280,
+          height: 720,
+        },
+      },
+      disableXvfb: false,
+      ignoreAllFlags: false,
     });
 
-    return await handlePuppeteerPage(browser);
+    return await handlePuppeteerPage(browser as unknown as Browser, page);
   } catch (error) {
     logger("server").error(error);
   } finally {
