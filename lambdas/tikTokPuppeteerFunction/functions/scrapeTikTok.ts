@@ -24,6 +24,7 @@ export const scrapeTikTok = async () => {
 
     const { browser, page } = await connect({
       headless: false,
+      args: [],
       customConfig: {
         chromePath: exec_path,
       },
@@ -35,7 +36,6 @@ export const scrapeTikTok = async () => {
         },
       },
       disableXvfb: false,
-      ignoreAllFlags: false,
     });
 
     return await handlePuppeteerPage(browser as unknown as Browser, page);
