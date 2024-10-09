@@ -19,6 +19,8 @@ export const writeScreenshotToS3 = async ({
 }: WriteScreenshotParams) => {
   const isDebug = process.env.DEBUG;
   const bucketName = "scraper-debug";
+  const tmpDir = isDebug ? "/tmp/" : "";
+
   const client = new S3Client({
     region: "us-east-1",
     credentials: {
@@ -29,22 +31,23 @@ export const writeScreenshotToS3 = async ({
 
   const timestamp = Date.now();
   const dateTime = format(timestamp, "MMddyyyy_HH:mm:ss");
-  const fileName = `${isDebug ? "/tmp/" : ""}${filePath}_${dateTime}.jpg`;
+  const baseFileName = `${filePath}_${dateTime}.jpg`;
+  const fullFilePath = `${tmpDir}${baseFileName}`;
 
   await page.screenshot({
-    path: fileName,
+    path: fullFilePath,
   });
 
   const command = new PutObjectCommand({
     Bucket: bucketName,
-    Key: fileName,
-    Body: await readFile(fileName),
+    Key: baseFileName,
+    Body: await readFile(fullFilePath),
   });
 
   try {
     const response = await client.send(command);
     logger("server").info(
-      `Successfully uploaded ${fileName} to ${bucketName} S3 bucket.`
+      `Successfully uploaded ${baseFileName} to ${bucketName} S3 bucket.`
     );
     return response;
   } catch (caught) {
