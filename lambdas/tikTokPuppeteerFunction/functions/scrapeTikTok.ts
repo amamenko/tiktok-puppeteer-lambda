@@ -78,7 +78,8 @@ export const scrapeTikTok = async () => {
 
     return await handlePuppeteerPage(browser as unknown as Browser, page);
   } catch (error) {
-    logger("server").error(error);
+    // logger("server").error(error);
+    console.error(error);
   } finally {
     if (browser !== null) await browser.close();
     const scrapingCompleteStatement = "Scraping complete. Browser closed.";
