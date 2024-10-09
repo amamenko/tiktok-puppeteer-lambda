@@ -1,14 +1,8 @@
 import "../node_modules/dotenv/config";
 import chromium from "@sparticuz/chromium";
-import puppeteer from "puppeteer-extra";
-import StealthPlugin from "puppeteer-extra-plugin-stealth";
+import puppeteer from "puppeteer";
 import { handlePuppeteerPage } from "./handlePuppeteerPage";
 import { logger } from "../logger/logger";
-
-const stealth = StealthPlugin();
-// Remove this specific stealth plugin from the default set
-stealth.enabledEvasions.delete("user-agent-override");
-puppeteer.use(stealth);
 
 export const scrapeTikTok = async () => {
   let browser = null;
