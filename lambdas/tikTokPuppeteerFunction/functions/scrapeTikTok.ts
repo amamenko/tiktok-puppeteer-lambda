@@ -5,6 +5,7 @@ import { handlePuppeteerPage } from "./handlePuppeteerPage";
 import { logger } from "../logger/logger";
 import { connect } from "puppeteer-real-browser";
 import chromium from "chrome-aws-lambda";
+import { execSync } from "child_process";
 
 export const scrapeTikTok = async () => {
   let browser = null;
@@ -20,6 +21,9 @@ export const scrapeTikTok = async () => {
 
     // we are running locally
     if (isLocal) exec_path = process.env.LOCAL_CHROMIUM;
+
+    // Start Xvfb using a child process
+    execSync("Xvfb :99 -screen 0 1280x1024x24 &");
 
     const { browser, page } = await connect({
       headless: false,
