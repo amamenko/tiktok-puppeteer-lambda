@@ -2,6 +2,7 @@ import { handleRequestFinished } from "./handleRequestFinished";
 import { waitForTimeout } from "./waitForTimeout";
 import { Browser, HTTPRequest, Page } from "puppeteer-core";
 import { logger } from "../logger/logger";
+import { writeScreenshotToS3 } from "./writeScreenshotToS3";
 
 export const handlePuppeteerPage = async (browser: Browser) => {
   try {
@@ -9,6 +10,7 @@ export const handlePuppeteerPage = async (browser: Browser) => {
     const isLocal =
       process.env.AWS_EXECUTION_ENV === undefined ||
       process.env.ENVIRONMENT === "local";
+    const isDebug = process.env.DEBUG;
 
     logger("server").info(`Setting Puppeteer configuration settings`);
 
@@ -72,16 +74,18 @@ export const handlePuppeteerPage = async (browser: Browser) => {
       `Successfully navigated to the TikTok LIVE Backstage portal! 🎉`
     );
 
-    if (isLocal)
-      await page.screenshot({
-        path: `tiktok-live-backstage-portal.jpg`,
+    if (isLocal || isDebug)
+      await writeScreenshotToS3({
+        page,
+        filePath: "backstage-portal",
       });
 
     await waitForTimeout(10000);
 
-    if (isLocal)
-      await page.screenshot({
-        path: `tiktok-live-backstage-portal2.jpg`,
+    if (isLocal || isDebug)
+      await writeScreenshotToS3({
+        page,
+        filePath: "timeout-backstage-portal",
       });
 
     // Keep clicking next button until it is disabled to trigger all paginated requests
@@ -98,9 +102,10 @@ export const handlePuppeteerPage = async (browser: Browser) => {
     const cssSelector = "li:not(.semi-page-item-disabled).semi-page-next";
     let loadMoreVisible = await isElementVisible(page, cssSelector);
 
-    if (isLocal)
-      await page.screenshot({
-        path: `tiktok-live-backstage-portal3.jpg`,
+    if (isLocal || isDebug)
+      await writeScreenshotToS3({
+        page,
+        filePath: "final-backstage-portal",
       });
 
     logger("server").info(

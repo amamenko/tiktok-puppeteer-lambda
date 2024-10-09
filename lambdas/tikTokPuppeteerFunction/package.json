@@ -5,7 +5,7 @@
   "main": "index",
   "scripts": {
     "dev": "ENVIRONMENT=local ts-node local.ts",
-    "start": "ts-node index.ts",
+    "start": "DEBUG=true ts-node index.ts",
     "build": "tsc --build ./tsconfig.json"
   },
   "repository": {
@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/amamenko/tiktok-puppeteer-lambda#readme",
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.667.0",
     "@sparticuz/chromium": "^129.0.0",
     "aws-lambda": "^1.0.7",
     "axios": "^1.4.0",
