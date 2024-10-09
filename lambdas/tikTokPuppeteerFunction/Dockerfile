@@ -9,28 +9,21 @@ RUN npm run build
 FROM public.ecr.aws/lambda/nodejs:18
 
 # Install xvfb and related dependencies
-RUN curl -sL https://deb.nodesource.com/setup_18.x | bash - && \
-    apt-get update && \
-    apt-get install -y \
-    xvfb \
-    x11-xkb-utils \
-    xfonts-100dpi \
-    xfonts-75dpi \
-    xfonts-scalable \
-    xfonts-cyrillic \
-    libxfont2 \
-    x11-apps \
-    dbus-x11 \
-    libxtst6 \
-    libnss3 \
-    libasound2 \
-    && apt-get clean
+RUN yum install -y \
+    xorg-x11-server-Xvfb \
+    xorg-x11-xauth \
+    xorg-x11-fonts-75dpi \
+    xorg-x11-fonts-100dpi \
+    xorg-x11-utils \
+    xorg-x11-fonts-cyrillic \
+    alsa-lib \
+    && yum clean all
 
 # Set the DISPLAY environment variable to use xvfb
 ENV DISPLAY=:99
 
 # Start Xvfb
-RUN nohup /usr/bin/Xvfb :99 -screen 0 1280x1024x24 &
+RUN Xvfb :99 -screen 0 1280x1024x24 &
 
 # Set working directory and copy over the app
 WORKDIR ${LAMBDA_TASK_ROOT}
