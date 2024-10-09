@@ -1,7 +1,7 @@
 import { handleRequestFinished } from "./handleRequestFinished";
 import { waitForTimeout } from "./waitForTimeout";
 import { Browser } from "puppeteer";
-import { HTTPRequest, Page } from "puppeteer-core";
+// import { HTTPRequest, Page } from "puppeteer-core";
 import { logger } from "../logger/logger";
 import { writeScreenshotToS3 } from "./writeScreenshotToS3";
 import { PageWithCursor } from "puppeteer-real-browser";

@@ -1,9 +1,10 @@
 import "../node_modules/dotenv/config";
-import chromium from "@sparticuz/chromium";
+// import chromium from "@sparticuz/chromium";
 import { Browser } from "puppeteer";
 import { handlePuppeteerPage } from "./handlePuppeteerPage";
 import { logger } from "../logger/logger";
 import { connect } from "puppeteer-real-browser";
+import chromium from "chrome-aws-lambda";
 
 export const scrapeTikTok = async () => {
   let browser = null;
@@ -15,9 +16,7 @@ export const scrapeTikTok = async () => {
   logger("server").info(scrapingStatement);
 
   try {
-    const args = chromium.args;
-    const headless = !!chromium.headless;
-    let exec_path = await chromium.executablePath();
+    let exec_path = await chromium.executablePath;
 
     // we are running locally
     if (isLocal) exec_path = process.env.LOCAL_CHROMIUM;
@@ -27,6 +26,7 @@ export const scrapeTikTok = async () => {
       args: isLocal
         ? []
         : [
+            ...chromium.args,
             "--autoplay-policy=user-gesture-required",
             "--disable-background-networking",
             "--disable-background-timer-throttling",
