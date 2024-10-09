@@ -9,30 +9,24 @@ RUN npm run build
 FROM public.ecr.aws/lambda/nodejs:18
 
 # Install xvfb and related dependencies
-RUN yum install -y \
-    xorg-x11-server-Xvfb \
-    libXcomposite \
-    libXcursor \
-    libXdamage \
-    libXext \
-    libXi \
-    libXtst \
+RUN curl -sL https://deb.nodesource.com/setup_18.x | bash - && \
+    apt-get update && \
+    apt-get install -y \
+    xvfb \
+    x11-xkb-utils \
+    xfonts-100dpi \
+    xfonts-75dpi \
+    xfonts-scalable \
+    xfonts-cyrillic \
+    libxfont2 \
+    x11-apps \
+    dbus-x11 \
+    libxtst6 \
     libnss3 \
-    libXScrnSaver \
-    alsa-lib \
-    atk \
-    cups-libs \
-    gtk3 \
-    ipa-gothic-fonts \
-    xorg-x11-fonts-100dpi \
-    xorg-x11-fonts-75dpi \
-    xorg-x11-fonts-cyrillic \
-    xorg-x11-fonts-Type1 \
-    xorg-x11-fonts-misc \
-    xorg-x11-utils \
-    && yum clean all
+    libasound2 \
+    && apt-get clean
 
-# Set xvfb as the default display
+# Set the DISPLAY environment variable to use xvfb
 ENV DISPLAY=:99
 
 # Start Xvfb
