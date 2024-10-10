@@ -1,4 +1,4 @@
-import "../node_modules/dotenv/config";
+import "dotenv/config";
 // import chromium from "@sparticuz/chromium";
 import { Browser } from "puppeteer-core";
 import { handlePuppeteerPage } from "./handlePuppeteerPage";

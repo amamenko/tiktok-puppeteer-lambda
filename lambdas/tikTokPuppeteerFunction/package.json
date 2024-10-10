@@ -25,7 +25,7 @@
     "axios": "^1.4.0",
     "chrome-aws-lambda": "^10.1.0",
     "date-fns": "^2.30.0",
-    "dotenv": "^16.3.1",
+    "dotenv": "^16.4.5",
     "lambda-local": "^2.2.0",
     "mongoose": "^7.4.1",
     "puppeteer-core": "^10.1.0",
