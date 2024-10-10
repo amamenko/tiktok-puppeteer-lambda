@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Remount /tmp/.X11-unix as read-write
+mount -o remount,rw /tmp/.X11-unix
+
 # Remove the Xvfb lock file if it exists
 if [ -e /tmp/.X99-lock ]; then
     echo "Removing Xvfb lock file..."
