@@ -1,6 +1,6 @@
 import "../node_modules/dotenv/config";
 // import chromium from "@sparticuz/chromium";
-import { Browser } from "puppeteer";
+import { Browser } from "puppeteer-core";
 import { handlePuppeteerPage } from "./handlePuppeteerPage";
 import { logger } from "../logger/logger";
 import { connect } from "puppeteer-real-browser";

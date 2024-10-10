@@ -7,8 +7,9 @@ RUN npm cache clean --force
 
 # Set working directory and copy over the app
 WORKDIR /usr/app
-COPY . .
+COPY package*.json ./
 RUN npm install
+COPY . .
 RUN npm run build
 
 # Use the AWS Lambda Node.js base image
