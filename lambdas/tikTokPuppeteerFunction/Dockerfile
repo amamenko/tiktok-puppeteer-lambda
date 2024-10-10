@@ -12,8 +12,6 @@ RUN npm install
 COPY . .
 RUN npm run build
 
-COPY --from=builder /usr/app/node_modules ./node_modules
-
 # Use the AWS Lambda Node.js base image
 FROM public.ecr.aws/lambda/nodejs:16 AS lambda
 
