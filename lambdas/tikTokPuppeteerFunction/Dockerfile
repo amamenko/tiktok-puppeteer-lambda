@@ -29,9 +29,9 @@ RUN yum install -y \
     && yum clean all
 
 # Download headless Chromium
-RUN curl -L -o /tmp/chromium.zip https://github.com/adieuadieu/serverless-chrome/releases/download/v1.0.0/chromium.zip \
-    && unzip /tmp/chromium.zip -d /usr/local/bin/ \
-    && rm /tmp/chromium.zip
+RUN curl -L -o /usr/local/bin/chromium \
+    https://github.com/adieuadieu/serverless-chrome/releases/download/v1.0.0/chromium \
+    && chmod +x /usr/local/bin/chromium
 
 # Copy the necessary files from the builder stage
 WORKDIR ${LAMBDA_TASK_ROOT}
