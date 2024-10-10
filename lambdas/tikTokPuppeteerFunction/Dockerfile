@@ -43,8 +43,10 @@ RUN mkdir -p /tmp/.X11-unix && \
     chmod 1777 /tmp/.X11-unix && \
     chown root:root /tmp/.X11-unix
 
+WORKDIR /app
+
 # Use the start.sh script as the entry point
 ENTRYPOINT ["/usr/local/bin/start.sh"]
 
 # CMD to run the Lambda function handler
-CMD ["index.handler"]
+CMD ["/app/index.handler"]
