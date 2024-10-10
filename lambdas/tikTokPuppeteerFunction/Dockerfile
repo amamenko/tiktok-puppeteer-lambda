@@ -47,4 +47,4 @@ RUN mkdir -p /tmp/.X11-unix && \
 ENTRYPOINT ["/usr/local/bin/start.sh"]
 
 # CMD to run the Lambda function handler
-CMD ["./index.handler"]
+CMD ["index.handler"]

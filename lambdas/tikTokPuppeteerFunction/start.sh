@@ -16,4 +16,4 @@ Xvfb :99 -screen 0 1280x1024x24 -nolisten tcp &
 sleep 3
 
 # Start the Lambda function handler
-exec "$@"
+exec node /var/task/index.js
