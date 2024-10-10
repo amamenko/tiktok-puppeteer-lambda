@@ -35,8 +35,6 @@ COPY --from=builder /usr/app/dist/interfaces ./interfaces
 COPY --from=builder /usr/app/dist/models ./models
 COPY --from=builder /usr/app/dist/logger ./logger
 
-RUN echo "Listing contents:" && ls -la
-
 # Install production dependencies
 RUN npm install --production
 
@@ -49,4 +47,4 @@ RUN mkdir -p /tmp/.X11-unix && \
 ENTRYPOINT ["/usr/local/bin/start.sh"]
 
 # CMD to run the Lambda function handler
-CMD ["../../index.handler"]
+CMD ["./index.handler"]

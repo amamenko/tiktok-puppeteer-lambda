@@ -6,6 +6,9 @@ if [ -e /tmp/.X99-lock ]; then
     rm -f /tmp/.X99-lock
 fi
 
+echo "Starting Xvfb with the following directory contents:"
+ls -al
+
 # Start Xvfb without listening on IPv6
 Xvfb :99 -screen 0 1280x1024x24 -nolisten tcp &
 
