@@ -27,6 +27,7 @@ RUN yum install -y \
     xorg-x11-fonts-75dpi \
     xorg-x11-fonts-scalable \
     xorg-x11-utils \
+    xorg-x11-server-Xvfb \
     && yum clean all
 
 # Download headless Chromium

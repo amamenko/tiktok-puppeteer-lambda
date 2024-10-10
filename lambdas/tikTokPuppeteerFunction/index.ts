@@ -6,6 +6,7 @@ import { dailyLiveSchema } from "./models/DailyLive";
 import { previousWeekTop100Schema } from "./models/PreviousWeekTop100";
 import { currentTop100LivesSchema } from "./models/CurrentTop100Lives";
 import { scrapeTikTok } from "./functions/scrapeTikTok";
+import { startXvfb } from "./functions/utils/startXvfb";
 
 export let conn = null;
 
@@ -17,6 +18,8 @@ exports.handler = async (
   callback: APIGatewayProxyCallback
 ) => {
   context.callbackWaitsForEmptyEventLoop = false;
+  // Start Xvfb before executing browser-based tasks
+  await startXvfb();
 
   if (conn == null) {
     conn = mongoose.createConnection(uri, {
