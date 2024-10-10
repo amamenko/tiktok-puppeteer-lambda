@@ -12,6 +12,8 @@ RUN npm install
 COPY . .
 RUN npm run build
 
+COPY --from=builder /usr/app/node_modules ./node_modules
+
 # Use the AWS Lambda Node.js base image
 FROM public.ecr.aws/lambda/nodejs:16 AS lambda
 
@@ -41,6 +43,7 @@ COPY --from=builder /usr/app/dist/functions ./functions
 COPY --from=builder /usr/app/dist/interfaces ./interfaces
 COPY --from=builder /usr/app/dist/models ./models
 COPY --from=builder /usr/app/dist/logger ./logger
+COPY --from=builder /usr/app/node_modules ./node_modules
 
 # Set the executable for Chromium
 ENV CHROME_BIN=/usr/local/bin/chromium
