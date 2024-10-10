@@ -18,12 +18,20 @@ export const scrapeTikTok = async () => {
   try {
     let exec_path = await chromium.executablePath;
 
-    // we are running locally
     if (isLocal) exec_path = process.env.LOCAL_CHROMIUM;
 
     const { browser, page } = await connect({
       headless: false,
-      args: [],
+      args: [
+        "--no-sandbox",
+        "--disable-setuid-sandbox",
+        "--disable-dev-shm-usage",
+        "--single-process",
+        "--disable-gpu",
+        "--disable-software-rasterizer",
+        "--window-size=1280,720",
+        "--display=:99",
+      ],
       turnstile: true,
       customConfig: {
         chromePath: exec_path,

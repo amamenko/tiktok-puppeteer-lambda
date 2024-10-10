@@ -22,8 +22,9 @@ RUN yum install -y \
 # Set the DISPLAY environment variable to use xvfb
 ENV DISPLAY=:99
 
-# Start Xvfb
-RUN Xvfb :99 -screen 0 1280x1024x24 &
+# Copy the start script into the container and make it executable
+COPY start.sh /usr/local/bin/start.sh
+RUN chmod +x /usr/local/bin/start.sh
 
 # Set working directory and copy over the app
 WORKDIR ${LAMBDA_TASK_ROOT}
@@ -37,5 +38,8 @@ COPY --from=builder /usr/app/dist/logger ./logger
 # Install production dependencies
 RUN npm install --production
 
-# Set the entry point
+# Use the start.sh script as the entry point
+ENTRYPOINT ["/usr/local/bin/start.sh"]
+
+# CMD to run the Lambda function handler
 CMD ["index.handler"]
