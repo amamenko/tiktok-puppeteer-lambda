@@ -21,8 +21,8 @@ RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key
     && apt-get install -y google-chrome-stable \
     && rm -rf /var/lib/apt/lists/*
 
-# Set up the working directory in the container
-WORKDIR /app
+# Set working directory and copy over the app
+WORKDIR ${LAMBDA_TASK_ROOT}
 
 # Copy package.json and package-lock.json to the working directory
 COPY package*.json ./
@@ -37,7 +37,10 @@ COPY . .
 FROM public.ecr.aws/lambda/nodejs:16 AS lambda
 
 # Copy the necessary files from the builder stage
-COPY --from=builder /app /var/task
+COPY --from=builder /usr/app/dist/index.js ./
+COPY --from=builder /usr/app/dist/functions ./functions
+COPY --from=builder /usr/app/dist/interfaces ./interfaces
+COPY --from=builder /usr/app/dist/models ./models
+COPY --from=builder /usr/app/dist/logger ./logger
 
-# Command to run the application (adjust the command as necessary)
 CMD ["index.handler"]
