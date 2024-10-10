@@ -1,50 +1,53 @@
-# Stage 1: Build the project
-FROM public.ecr.aws/lambda/nodejs:18 as builder
-WORKDIR /usr/app
-COPY . .
+# Use the official Node.js 16 image as the base image
+FROM node:16 AS builder
+
+# Set npm registry
+RUN npm config set registry https://registry.npmjs.org/
+RUN npm cache clean --force
+
+# Install necessary dependencies for running Chrome
+RUN apt-get update && apt-get install -y \
+    wget \
+    gnupg \
+    ca-certificates \
+    apt-transport-https \
+    xvfb \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install Google Chrome
+RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - \
+    && echo "deb [arch=amd64] https://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list \
+    && apt-get update \
+    && apt-get install -y google-chrome-stable \
+    && rm -rf /var/lib/apt/lists/*
+
+# Set up the working directory in the container
+WORKDIR /app
+
+# Copy package.json and package-lock.json to the working directory
+COPY package*.json ./
+
+# Install Node.js dependencies
 RUN npm install
-RUN npm run build
 
-# Stage 2: Final stage with xvfb setup
-FROM public.ecr.aws/lambda/nodejs:18
+# Copy the rest of the application code
+COPY . .
 
-# Install xvfb and related dependencies
-RUN yum install -y \
-    xorg-x11-utils \
-    xorg-x11-server-Xvfb \
-    xorg-x11-xauth \
-    xorg-x11-fonts-75dpi \
-    xorg-x11-fonts-100dpi \
-    xorg-x11-fonts-cyrillic \
-    alsa-lib \
-    && yum clean all
-
-# Set the DISPLAY environment variable to use xvfb
-ENV DISPLAY=:99
-
-# Copy the start script into the container and make it executable
-COPY start.sh /usr/local/bin/start.sh
-RUN chmod +x /usr/local/bin/start.sh
-
-# Set working directory and copy over the app
-WORKDIR ${LAMBDA_TASK_ROOT}
-COPY package.json ./
-COPY --from=builder /usr/app/dist/index.js ./
-COPY --from=builder /usr/app/dist/functions ./functions
-COPY --from=builder /usr/app/dist/interfaces ./interfaces
-COPY --from=builder /usr/app/dist/models ./models
-COPY --from=builder /usr/app/dist/logger ./logger
-
-# Install production dependencies
-RUN npm install --production
-
-# Set up permissions for Xvfb in the Docker container
+# Remove the Xvfb lock file if it exists
 RUN mkdir -p /tmp/.X11-unix && \
     chmod 1777 /tmp/.X11-unix && \
     chown root:root /tmp/.X11-unix
 
-# Use the start.sh script as the entry point
-ENTRYPOINT ["/usr/local/bin/start.sh"]
+# Use a multi-stage build to optimize the image size for Lambda
+FROM public.ecr.aws/lambda/nodejs:16 AS lambda
 
-# CMD to run the Lambda function handler
+# Copy the necessary files from the builder stage
+COPY --from=builder /app /var/task
+
+# Command to run the application (adjust the command as necessary)
 CMD ["index.handler"]
+
+# Use the start.sh script as the entry point
+COPY start.sh /usr/local/bin/start.sh
+RUN chmod +x /usr/local/bin/start.sh
+ENTRYPOINT ["/usr/local/bin/start.sh"]
