@@ -6,8 +6,8 @@ if [ -e /tmp/.X99-lock ]; then
     rm -f /tmp/.X99-lock
 fi
 
-# Start Xvfb in the background
-Xvfb :99 -screen 0 1280x1024x24 &
+# Start Xvfb without listening on IPv6
+Xvfb :99 -screen 0 1280x1024x24 -nolisten tcp &
 
 # Wait a few seconds to make sure Xvfb starts
 sleep 3

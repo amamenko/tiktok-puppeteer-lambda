@@ -11,7 +11,7 @@ export let conn = null;
 
 const uri = `mongodb+srv://${process.env.MONGO_DB_USERNAME}:${process.env.MONGO_DB_PASSWORD}@${process.env.MONGO_DB_CLUSTER}.mongodb.net/${process.env.MONGO_DB_DATABASE}?retryWrites=true&w=majority`;
 
-export const handler = async (
+exports.handler = async (
   event: any,
   context: Context,
   callback: APIGatewayProxyCallback
