@@ -38,6 +38,11 @@ COPY --from=builder /usr/app/dist/logger ./logger
 # Install production dependencies
 RUN npm install --production
 
+# Set up permissions for Xvfb in the Docker container
+RUN mkdir -p /tmp/.X11-unix && \
+    chmod 1777 /tmp/.X11-unix && \
+    chown root:root /tmp/.X11-unix
+
 # Use the start.sh script as the entry point
 ENTRYPOINT ["/usr/local/bin/start.sh"]
 
