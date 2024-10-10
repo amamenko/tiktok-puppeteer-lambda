@@ -7,8 +7,10 @@ import { previousWeekTop100Schema } from "./models/PreviousWeekTop100";
 import { currentTop100LivesSchema } from "./models/CurrentTop100Lives";
 import { scrapeTikTok } from "./functions/scrapeTikTok";
 import { startXvfb } from "./functions/utils/startXvfb";
+import fetch from "node-fetch";
 
 export let conn = null;
+globalThis.fetch = fetch as any;
 
 const uri = `mongodb+srv://${process.env.MONGO_DB_USERNAME}:${process.env.MONGO_DB_PASSWORD}@${process.env.MONGO_DB_CLUSTER}.mongodb.net/${process.env.MONGO_DB_DATABASE}?retryWrites=true&w=majority`;
 
@@ -18,6 +20,7 @@ exports.handler = async (
   callback: APIGatewayProxyCallback
 ) => {
   context.callbackWaitsForEmptyEventLoop = false;
+
   // Start Xvfb before executing browser-based tasks
   await startXvfb();
 
