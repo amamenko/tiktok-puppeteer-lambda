@@ -13,7 +13,7 @@ COPY . .
 RUN npm run build
 
 # Use the AWS Lambda Node.js base image
-FROM public.ecr.aws/lambda/nodejs:16 AS lambda
+FROM public.ecr.aws/lambda/nodejs:18 AS lambda
 
 # Install necessary packages for running headless Chromium
 RUN yum install -y \
