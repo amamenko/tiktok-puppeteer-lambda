@@ -23,7 +23,7 @@ RUN yum install -y \
 ENV DISPLAY=:99
 
 # Copy the start script into the container and make it executable
-COPY --from=builder /usr/app/dist/start.sh /usr/local/bin/start.sh
+COPY --from=builder start.sh /usr/local/bin/start.sh
 RUN chmod +x /usr/local/bin/start.sh
 
 # Set working directory and copy over the app
