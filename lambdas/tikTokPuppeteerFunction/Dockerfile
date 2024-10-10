@@ -35,7 +35,7 @@ COPY --from=builder /usr/app/dist/interfaces ./interfaces
 COPY --from=builder /usr/app/dist/models ./models
 COPY --from=builder /usr/app/dist/logger ./logger
 
-RUN ls -la /app
+RUN ls -la
 
 # Install production dependencies
 RUN npm install --production
@@ -44,8 +44,6 @@ RUN npm install --production
 RUN mkdir -p /tmp/.X11-unix && \
     chmod 1777 /tmp/.X11-unix && \
     chown root:root /tmp/.X11-unix
-
-WORKDIR /app
 
 # Use the start.sh script as the entry point
 ENTRYPOINT ["/usr/local/bin/start.sh"]
