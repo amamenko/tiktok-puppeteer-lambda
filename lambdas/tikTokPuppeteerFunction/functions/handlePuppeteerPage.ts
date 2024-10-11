@@ -3,10 +3,25 @@ import { waitForTimeout } from "./waitForTimeout";
 import { Browser, HTTPRequest, Page } from "puppeteer-core";
 import { logger } from "../logger/logger";
 import { writeScreenshotToS3 } from "./writeScreenshotToS3";
+import { generateRandomUA } from "./generateRandomUA";
+import { scrollToBottomOfPage } from "./utils/scrollToBottomOfPage";
 
 export const handlePuppeteerPage = async (browser: Browser) => {
   try {
     const page = await browser.newPage();
+
+    await page.setRequestInterception(true);
+    page.on("request", (request) => {
+      // Override headers
+      const headers = Object.assign({}, request.headers(), {
+        "Accept-Language": "en-US;q=0.7",
+      });
+      request.continue({ headers });
+    });
+
+    const randomUA = generateRandomUA();
+    await page.setUserAgent(randomUA);
+
     const isLocal =
       process.env.AWS_EXECUTION_ENV === undefined ||
       process.env.ENVIRONMENT === "local";
@@ -66,6 +81,8 @@ export const handlePuppeteerPage = async (browser: Browser) => {
 
     await waitForTimeout(2000);
 
+    await scrollToBottomOfPage(page);
+
     await page.goto(
       "https://live-backstage.tiktok.com/portal/anchor/live?tab=liveRoom"
     );
@@ -73,6 +90,8 @@ export const handlePuppeteerPage = async (browser: Browser) => {
     logger("server").info(
       `Successfully navigated to the TikTok LIVE Backstage portal! 🎉`
     );
+
+    await scrollToBottomOfPage(page);
 
     if (isLocal || isDebug)
       await writeScreenshotToS3({

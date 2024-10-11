@@ -3,6 +3,7 @@ import { Browser } from "puppeteer-core";
 import { logger } from "../logger/logger";
 import { writeScreenshotToS3 } from "./writeScreenshotToS3";
 import { generateRandomUA } from "./generateRandomUA";
+import { scrollToBottomOfPage } from "./utils/scrollToBottomOfPage";
 
 export const botTestScreenshot = async (browser: Browser) => {
   try {
@@ -26,7 +27,6 @@ export const botTestScreenshot = async (browser: Browser) => {
     });
 
     const randomUA = generateRandomUA();
-    // Set custom user agent
     await page.setUserAgent(randomUA);
 
     logger("server").info(
@@ -50,10 +50,7 @@ export const botTestScreenshot = async (browser: Browser) => {
 
     await waitForTimeout(10000);
 
-    // Scrolling to the bottom of the page
-    await page.evaluate(() => {
-      window.scrollTo(0, document.body.scrollHeight);
-    });
+    await scrollToBottomOfPage(page);
 
     await writeScreenshotToS3({
       page,
