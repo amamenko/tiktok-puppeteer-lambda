@@ -5,11 +5,11 @@ import {
 } from "@aws-sdk/client-s3";
 import { format } from "date-fns";
 import { readFile } from "fs/promises";
+import { Page } from "puppeteer-core";
 import { logger } from "../logger/logger";
-import { PageWithCursor } from "puppeteer-real-browser";
 
 interface WriteScreenshotParams {
-  page: PageWithCursor;
+  page: Page;
   filePath: string;
 }
 
@@ -31,7 +31,7 @@ export const writeScreenshotToS3 = async ({
 
   const timestamp = Date.now();
   const dateTime = format(timestamp, "MMddyyyy_HH:mm:ss");
-  const baseFileName = `${filePath}_${dateTime}.jpg`;
+  const baseFileName = `${dateTime}_${filePath}.jpg`;
   const fullFilePath = `${tmpDir}${baseFileName}`;
 
   await page.screenshot({

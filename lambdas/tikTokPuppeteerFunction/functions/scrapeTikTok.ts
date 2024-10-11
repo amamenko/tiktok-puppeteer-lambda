@@ -1,10 +1,15 @@
-import "dotenv/config";
-// import chromium from "@sparticuz/chromium";
-import { Browser } from "puppeteer-core";
+import "../node_modules/dotenv/config";
+import chromium from "@sparticuz/chromium";
+import puppeteer from "puppeteer-extra";
+import StealthPlugin from "puppeteer-extra-plugin-stealth";
 import { handlePuppeteerPage } from "./handlePuppeteerPage";
 import { logger } from "../logger/logger";
-import { connect } from "puppeteer-real-browser";
-import chromium from "chrome-aws-lambda";
+import { botTestScreenshot } from "./botTestScreenshot";
+
+const stealth = StealthPlugin();
+// Remove this specific stealth plugin from the default set
+stealth.enabledEvasions.delete("user-agent-override");
+puppeteer.use(stealth);
 
 export const scrapeTikTok = async () => {
   let browser = null;
@@ -16,37 +21,34 @@ export const scrapeTikTok = async () => {
   logger("server").info(scrapingStatement);
 
   try {
-    let exec_path = await chromium.executablePath;
+    const args = chromium.args;
+    const headless = chromium.headless;
+    let exec_path = await chromium.executablePath();
 
+    // we are running locally
     if (isLocal) exec_path = process.env.LOCAL_CHROMIUM;
 
-    const { browser, page } = await connect({
-      headless: false,
-      args: [
-        "--no-sandbox",
-        "--disable-setuid-sandbox",
-        "--disable-dev-shm-usage",
-        "--single-process",
-        "--disable-gpu",
-        "--disable-software-rasterizer",
-        "--window-size=1280,720",
-        "--display=:99",
-      ],
-      turnstile: true,
-      customConfig: {
-        chromePath: exec_path,
+    browser = await puppeteer.launch({
+      args: isLocal
+        ? []
+        : [
+            ...args,
+            "--window-size=1280,720",
+            "--disable-dev-shm-usage",
+            "--user-agent=Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/129.0.0.0 Safari/537.36",
+          ],
+      defaultViewport: {
+        width: 1280,
+        height: 720,
       },
-      connectOption: {},
-      disableXvfb: false,
+      executablePath: exec_path,
+      headless,
     });
 
-    const puppeteerSuccessStatement = `Successfully launched Puppeteer! ✅`;
-    logger("server").info(puppeteerSuccessStatement);
-
-    return await handlePuppeteerPage(browser as unknown as Browser, page);
+    return await botTestScreenshot(browser);
+    // return await handlePuppeteerPage(browser);
   } catch (error) {
-    // logger("server").error(error);
-    console.error(error);
+    logger("server").error(error);
   } finally {
     if (browser !== null) await browser.close();
     const scrapingCompleteStatement = "Scraping complete. Browser closed.";

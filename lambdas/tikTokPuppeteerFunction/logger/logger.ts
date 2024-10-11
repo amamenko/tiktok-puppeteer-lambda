@@ -13,7 +13,6 @@ const getConfig = (program: string) => {
     port: process.env.PAPERTRAIL_PORT ? Number(process.env.PAPERTRAIL_PORT) : 0,
     hostname,
     program,
-    handleExceptions: true,
   });
 
   transports.push(papertrailTransport);

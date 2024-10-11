@@ -1,16 +1,12 @@
 import { handleRequestFinished } from "./handleRequestFinished";
 import { waitForTimeout } from "./waitForTimeout";
-import { Browser } from "puppeteer-core";
-// import { HTTPRequest, Page } from "puppeteer-core";
+import { Browser, HTTPRequest, Page } from "puppeteer-core";
 import { logger } from "../logger/logger";
 import { writeScreenshotToS3 } from "./writeScreenshotToS3";
-import { PageWithCursor } from "puppeteer-real-browser";
 
-export const handlePuppeteerPage = async (
-  browser: Browser,
-  page: PageWithCursor
-) => {
+export const handlePuppeteerPage = async (browser: Browser) => {
   try {
+    const page = await browser.newPage();
     const isLocal =
       process.env.AWS_EXECUTION_ENV === undefined ||
       process.env.ENVIRONMENT === "local";
@@ -27,7 +23,7 @@ export const handlePuppeteerPage = async (
 
     let totalUpdatedLives = 0;
 
-    page.on("requestfinished", async (request: any) => {
+    page.on("requestfinished", async (request: HTTPRequest) => {
       const modifiedLives = await handleRequestFinished(
         request,
         totalUpdatedLives
@@ -93,10 +89,7 @@ export const handlePuppeteerPage = async (
       });
 
     // Keep clicking next button until it is disabled to trigger all paginated requests
-    const isElementVisible = async (
-      page: PageWithCursor,
-      cssSelector: string
-    ) => {
+    const isElementVisible = async (page: Page, cssSelector: string) => {
       let visible = true;
       await waitForTimeout(5000);
       await page
