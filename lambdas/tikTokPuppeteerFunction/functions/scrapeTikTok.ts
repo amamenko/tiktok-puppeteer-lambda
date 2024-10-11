@@ -2,10 +2,9 @@ import "../node_modules/dotenv/config";
 import chromium from "@sparticuz/chromium";
 import puppeteer from "puppeteer-extra";
 import StealthPlugin from "puppeteer-extra-plugin-stealth";
-// import { handlePuppeteerPage } from "./handlePuppeteerPage";
+import { handlePuppeteerPage } from "./handlePuppeteerPage";
 import { logger } from "../logger/logger";
-import { botTestScreenshot } from "./botTestScreenshot";
-import proxyChain from "proxy-chain";
+// import { botTestScreenshot } from "./botTestScreenshot";
 
 const stealth = StealthPlugin();
 // Remove this specific stealth plugin from the default set
@@ -13,9 +12,11 @@ stealth.enabledEvasions.delete("user-agent-override");
 puppeteer.use(stealth);
 
 export const scrapeTikTok = async () => {
+  const proxyChain = await import(`proxy-chain`);
+
   let browser = null;
   const proxyAddress = process.env.PROXY_ADDRESS || "";
-  const newProxyUrl = await proxyChain.anonymizeProxy(proxyAddress);
+  const newProxyUrl = await proxyChain?.anonymizeProxy(proxyAddress);
 
   const isLocal =
     process.env.AWS_EXECUTION_ENV === undefined ||
@@ -55,8 +56,8 @@ export const scrapeTikTok = async () => {
       headless,
     });
 
-    return await botTestScreenshot(browser);
-    // return await handlePuppeteerPage(browser);
+    // return await botTestScreenshot(browser);
+    return await handlePuppeteerPage(browser);
   } catch (error) {
     logger("server").error(error);
   } finally {

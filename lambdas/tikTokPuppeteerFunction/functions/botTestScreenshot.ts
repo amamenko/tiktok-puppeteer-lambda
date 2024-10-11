@@ -48,13 +48,18 @@ export const botTestScreenshot = async (browser: Browser) => {
       waitUntil: "networkidle0",
     });
 
-    await waitForTimeout(10000);
+    await writeScreenshotToS3({
+      page,
+      filePath: "bot-test",
+    });
+
+    await waitForTimeout(20000);
 
     await scrollToBottomOfPage(page);
 
     await writeScreenshotToS3({
       page,
-      filePath: "bot-test",
+      filePath: "bot-test-scroll",
     });
 
     logger("server").info(
