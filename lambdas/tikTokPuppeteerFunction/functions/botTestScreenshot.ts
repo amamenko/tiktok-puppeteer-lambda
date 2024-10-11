@@ -1,12 +1,19 @@
-import { handleRequestFinished } from "./handleRequestFinished";
 import { waitForTimeout } from "./waitForTimeout";
-import { Browser, HTTPRequest, Page } from "puppeteer-core";
+import { Browser } from "puppeteer-core";
 import { logger } from "../logger/logger";
 import { writeScreenshotToS3 } from "./writeScreenshotToS3";
 import { generateRandomUA } from "./generateRandomUA";
 
 export const botTestScreenshot = async (browser: Browser) => {
   try {
+    const botTestScreenshotSite = process.env.BOT_TEST_SCREENSHOT_SITE || "";
+    if (!botTestScreenshotSite) {
+      logger("server").error(
+        `No bot test site URL provided. Please provide a URL in the environment variable BOT_TEST_SCREENSHOT_SITE.`
+      );
+      return false;
+    }
+
     const page = await browser.newPage();
 
     const randomUA = generateRandomUA();
@@ -26,7 +33,7 @@ export const botTestScreenshot = async (browser: Browser) => {
 
     logger("server").info("Now visiting bot test site. 🤖");
 
-    await page.goto("https://ipinfo.io/products/proxy-vpn-detection-api", {
+    await page.goto(botTestScreenshotSite, {
       waitUntil: "networkidle0",
     });
 
