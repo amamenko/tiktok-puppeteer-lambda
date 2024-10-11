@@ -31,7 +31,9 @@ export const botTestScreenshot = async (browser: Browser) => {
     // Configure the navigation timeout
     page.setDefaultNavigationTimeout(0);
 
-    logger("server").info("Now visiting bot test site. 🤖");
+    logger("server").info(
+      `Now visiting bot test site ${botTestScreenshotSite} 🤖`
+    );
 
     await page.goto(botTestScreenshotSite, {
       waitUntil: "networkidle0",
@@ -39,14 +41,19 @@ export const botTestScreenshot = async (browser: Browser) => {
 
     await waitForTimeout(10000);
 
-    logger("server").info("Now visiting bot test site. 🤖");
+    // Scrolling to the bottom of the page
+    await page.evaluate(() => {
+      window.scrollTo(0, document.body.scrollHeight);
+    });
 
     await writeScreenshotToS3({
       page,
       filePath: "bot-test",
     });
 
-    logger("server").info("Finished testing bot screenshot! 🤖");
+    logger("server").info(
+      `Finished testing bot screenshot at ${botTestScreenshotSite}! 🤖`
+    );
 
     return true;
   } catch (e) {
