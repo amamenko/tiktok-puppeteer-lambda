@@ -31,7 +31,12 @@ export const scrapeTikTok = async () => {
     browser = await puppeteer.launch({
       args: isLocal
         ? []
-        : [...args, "--window-size=1280,720", "--disable-dev-shm-usage"],
+        : [
+            ...args,
+            "--window-size=1280,720",
+            "--disable-dev-shm-usage",
+            "--lang=en-US",
+          ],
       defaultViewport: {
         width: 1280,
         height: 720,

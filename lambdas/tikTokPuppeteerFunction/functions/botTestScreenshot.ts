@@ -16,6 +16,15 @@ export const botTestScreenshot = async (browser: Browser) => {
 
     const page = await browser.newPage();
 
+    await page.setRequestInterception(true);
+    page.on("request", (request) => {
+      // Override headers
+      const headers = Object.assign({}, request.headers(), {
+        "Accept-Language": "en-US;q=0.7",
+      });
+      request.continue({ headers });
+    });
+
     const randomUA = generateRandomUA();
     // Set custom user agent
     await page.setUserAgent(randomUA);
