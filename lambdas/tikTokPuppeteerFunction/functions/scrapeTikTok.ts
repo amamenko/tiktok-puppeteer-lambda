@@ -41,8 +41,6 @@ export const scrapeTikTok = async () => {
             "--window-size=1280,720",
             "--disable-dev-shm-usage",
             "--lang=en-US",
-            "--start-maximized",
-            "--disable-gpu",
             "--ignore-certificate-errors",
             ...(proxyAddress ? [`--proxy-server=${newProxyUrl}`] : []),
           ].filter((el) => el),
@@ -51,7 +49,6 @@ export const scrapeTikTok = async () => {
         width: 1280,
         height: 720,
       },
-      ignoreDefaultArgs: ["--enable-automation"],
       executablePath: exec_path,
       headless,
     });
