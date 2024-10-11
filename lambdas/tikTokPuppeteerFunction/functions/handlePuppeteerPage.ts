@@ -57,7 +57,9 @@ export const handlePuppeteerPage = async (browser: Browser) => {
 
     logger("server").info(`Navigating to TikTok LIVE Backstage portal... 🚀`);
 
-    await page.goto("https://live-backstage.tiktok.com");
+    await page.goto("https://live-backstage.tiktok.com", {
+      waitUntil: "networkidle0",
+    });
 
     await waitForTimeout(2000);
 
