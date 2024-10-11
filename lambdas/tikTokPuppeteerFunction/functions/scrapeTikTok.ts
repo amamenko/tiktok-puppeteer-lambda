@@ -12,11 +12,8 @@ stealth.enabledEvasions.delete("user-agent-override");
 puppeteer.use(stealth);
 
 export const scrapeTikTok = async () => {
-  const proxyChain = await import(`proxy-chain`);
-
   let browser = null;
   const proxyAddress = process.env.PROXY_ADDRESS || "";
-  const newProxyUrl = await proxyChain?.anonymizeProxy(proxyAddress);
 
   const isLocal =
     process.env.AWS_EXECUTION_ENV === undefined ||
@@ -38,16 +35,13 @@ export const scrapeTikTok = async () => {
         ? []
         : [
             ...args,
-            "--window-size=1280,720",
-            "--disable-dev-shm-usage",
-            "--lang=en-US",
+            ...(proxyAddress ? [`--proxy-server=${proxyAddress}`] : []),
             "--ignore-certificate-errors",
-            ...(proxyAddress ? [`--proxy-server=${newProxyUrl}`] : []),
           ].filter((el) => el),
       ignoreHTTPSErrors: true,
       defaultViewport: {
-        width: 1280,
-        height: 720,
+        width: 1440,
+        height: 812,
       },
       executablePath: exec_path,
       headless,

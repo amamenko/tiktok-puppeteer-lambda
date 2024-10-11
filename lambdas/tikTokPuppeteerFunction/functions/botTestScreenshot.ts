@@ -8,6 +8,8 @@ import { scrollToBottomOfPage } from "./utils/scrollToBottomOfPage";
 export const botTestScreenshot = async (browser: Browser) => {
   try {
     const botTestScreenshotSite = process.env.BOT_TEST_SCREENSHOT_SITE || "";
+    const proxyAddress = process.env.PROXY_ADDRESS || "";
+
     if (!botTestScreenshotSite) {
       logger("server").error(
         `No bot test site URL provided. Please provide a URL in the environment variable BOT_TEST_SCREENSHOT_SITE.`
@@ -17,14 +19,13 @@ export const botTestScreenshot = async (browser: Browser) => {
 
     const page = await browser.newPage();
 
-    await page.setRequestInterception(true);
-    page.on("request", (request) => {
-      // Override headers
-      const headers = Object.assign({}, request.headers(), {
-        "Accept-Language": "en-US;q=0.7",
+    // Authenticate proxy before visiting the target website
+    if (proxyAddress) {
+      await page.authenticate({
+        username: process.env.PROXY_USERNAME || "",
+        password: process.env.PROXY_PASSWORD || "",
       });
-      request.continue({ headers });
-    });
+    }
 
     const randomUA = generateRandomUA();
     await page.setUserAgent(randomUA);
@@ -34,8 +35,8 @@ export const botTestScreenshot = async (browser: Browser) => {
     );
 
     await page.setViewport({
-      width: 1280,
-      height: 720,
+      width: 1440,
+      height: 812,
     });
     // Configure the navigation timeout
     page.setDefaultNavigationTimeout(0);
@@ -46,6 +47,15 @@ export const botTestScreenshot = async (browser: Browser) => {
 
     await page.goto(botTestScreenshotSite, {
       waitUntil: "networkidle0",
+    });
+
+    await page.setRequestInterception(true);
+    page.on("request", async (request) => {
+      // Override headers
+      const headers = Object.assign({}, request.headers(), {
+        "Accept-Language": "en-US;q=0.7",
+      });
+      request.continue({ headers });
     });
 
     await writeScreenshotToS3({

@@ -33,6 +33,7 @@
     "puppeteer-extra": "^3.3.6",
     "puppeteer-extra-plugin-proxy": "^1.0.2",
     "puppeteer-extra-plugin-stealth": "^2.11.2",
+    "puppeteer-proxy": "^1.0.3",
     "winston": "^3.10.0",
     "winston-papertrail-transport": "^1.0.9"
   },

@@ -8,7 +8,16 @@ import { scrollToBottomOfPage } from "./utils/scrollToBottomOfPage";
 
 export const handlePuppeteerPage = async (browser: Browser) => {
   try {
+    const proxyAddress = process.env.PROXY_ADDRESS || "";
     const page = await browser.newPage();
+
+    // Authenticate proxy before visiting the target website
+    if (proxyAddress) {
+      await page.authenticate({
+        username: process.env.PROXY_USERNAME || "",
+        password: process.env.PROXY_PASSWORD || "",
+      });
+    }
 
     await page.setRequestInterception(true);
     page.on("request", (request) => {
@@ -30,8 +39,8 @@ export const handlePuppeteerPage = async (browser: Browser) => {
     logger("server").info(`Setting Puppeteer configuration settings`);
 
     await page.setViewport({
-      width: 1280,
-      height: 720,
+      width: 1440,
+      height: 812,
     });
     // Configure the navigation timeout
     page.setDefaultNavigationTimeout(0);
