@@ -26,15 +26,18 @@
     "date-fns": "^2.30.0",
     "dotenv": "^16.3.1",
     "lambda-local": "^2.2.0",
+    "lodash.sample": "^4.2.1",
     "mongoose": "^7.4.1",
-    "puppeteer-core": "^23.5.1",
+    "puppeteer-core": "npm:rebrowser-puppeteer-core@^23.3.1",
     "puppeteer-extra": "^3.3.6",
+    "puppeteer-extra-plugin-proxy": "^1.0.2",
     "puppeteer-extra-plugin-stealth": "^2.11.2",
     "winston": "^3.10.0",
     "winston-papertrail-transport": "^1.0.9"
   },
   "devDependencies": {
     "@types/aws-lambda": "^8.10.119",
+    "@types/lodash.sample": "^4.2.9",
     "@types/node": "^20.4.5",
     "ts-node": "^10.9.1"
   }

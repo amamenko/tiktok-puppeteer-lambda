@@ -2,9 +2,9 @@ import "../node_modules/dotenv/config";
 import chromium from "@sparticuz/chromium";
 import puppeteer from "puppeteer-extra";
 import StealthPlugin from "puppeteer-extra-plugin-stealth";
-import { handlePuppeteerPage } from "./handlePuppeteerPage";
+// import { handlePuppeteerPage } from "./handlePuppeteerPage";
 import { logger } from "../logger/logger";
-// import { botTestScreenshot } from "./botTestScreenshot";
+import { botTestScreenshot } from "./botTestScreenshot";
 
 const stealth = StealthPlugin();
 // Remove this specific stealth plugin from the default set
@@ -13,6 +13,8 @@ puppeteer.use(stealth);
 
 export const scrapeTikTok = async () => {
   let browser = null;
+  const proxyAddress = process.env.PROXY_ADDRESS;
+
   const isLocal =
     process.env.AWS_EXECUTION_ENV === undefined ||
     process.env.ENVIRONMENT === "local";
@@ -36,17 +38,23 @@ export const scrapeTikTok = async () => {
             "--window-size=1280,720",
             "--disable-dev-shm-usage",
             "--lang=en-US",
-          ],
+            "--start-maximized",
+            "--disable-gpu",
+            "--ignore-certificate-errors",
+            ...(proxyAddress ? [`--proxy-server=${proxyAddress}`] : []),
+          ].filter((el) => el),
+      ignoreHTTPSErrors: true,
       defaultViewport: {
         width: 1280,
         height: 720,
       },
+      ignoreDefaultArgs: ["--enable-automation"],
       executablePath: exec_path,
       headless,
     });
 
-    // return await botTestScreenshot(browser);
-    return await handlePuppeteerPage(browser);
+    return await botTestScreenshot(browser);
+    // return await handlePuppeteerPage(browser);
   } catch (error) {
     logger("server").error(error);
   } finally {
