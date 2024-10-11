@@ -28,6 +28,7 @@
     "lambda-local": "^2.2.0",
     "lodash.sample": "^4.2.1",
     "mongoose": "^7.4.1",
+    "proxy-chain": "^2.5.3",
     "puppeteer-core": "npm:rebrowser-puppeteer-core@^23.3.1",
     "puppeteer-extra": "^3.3.6",
     "puppeteer-extra-plugin-proxy": "^1.0.2",

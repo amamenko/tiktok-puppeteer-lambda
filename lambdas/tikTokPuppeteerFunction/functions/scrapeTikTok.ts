@@ -5,6 +5,7 @@ import StealthPlugin from "puppeteer-extra-plugin-stealth";
 // import { handlePuppeteerPage } from "./handlePuppeteerPage";
 import { logger } from "../logger/logger";
 import { botTestScreenshot } from "./botTestScreenshot";
+import proxyChain from "proxy-chain";
 
 const stealth = StealthPlugin();
 // Remove this specific stealth plugin from the default set
@@ -13,7 +14,8 @@ puppeteer.use(stealth);
 
 export const scrapeTikTok = async () => {
   let browser = null;
-  const proxyAddress = process.env.PROXY_ADDRESS;
+  const proxyAddress = process.env.PROXY_ADDRESS || "";
+  const newProxyUrl = await proxyChain.anonymizeProxy(proxyAddress);
 
   const isLocal =
     process.env.AWS_EXECUTION_ENV === undefined ||
@@ -41,7 +43,7 @@ export const scrapeTikTok = async () => {
             "--start-maximized",
             "--disable-gpu",
             "--ignore-certificate-errors",
-            ...(proxyAddress ? [`--proxy-server=${proxyAddress}`] : []),
+            ...(proxyAddress ? [`--proxy-server=${newProxyUrl}`] : []),
           ].filter((el) => el),
       ignoreHTTPSErrors: true,
       defaultViewport: {
