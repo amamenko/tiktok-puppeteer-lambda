@@ -54,6 +54,12 @@ export const handlePuppeteerPage = async (browser: Browser) => {
 
     await waitForTimeout(2000);
 
+    if (isLocal || isDebug)
+      await writeScreenshotToS3({
+        page,
+        filePath: "login",
+      });
+
     // Top-right teal 'Log in' button
     try {
       await page.click("button.semi-button-primary");
