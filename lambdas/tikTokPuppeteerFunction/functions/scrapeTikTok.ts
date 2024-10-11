@@ -4,7 +4,7 @@ import puppeteer from "puppeteer-extra";
 import StealthPlugin from "puppeteer-extra-plugin-stealth";
 import { handlePuppeteerPage } from "./handlePuppeteerPage";
 import { logger } from "../logger/logger";
-import { botTestScreenshot } from "./botTestScreenshot";
+// import { botTestScreenshot } from "./botTestScreenshot";
 
 const stealth = StealthPlugin();
 // Remove this specific stealth plugin from the default set
@@ -31,12 +31,7 @@ export const scrapeTikTok = async () => {
     browser = await puppeteer.launch({
       args: isLocal
         ? []
-        : [
-            ...args,
-            "--window-size=1280,720",
-            "--disable-dev-shm-usage",
-            "--user-agent=Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/129.0.0.0 Safari/537.36",
-          ],
+        : [...args, "--window-size=1280,720", "--disable-dev-shm-usage"],
       defaultViewport: {
         width: 1280,
         height: 720,
@@ -45,8 +40,8 @@ export const scrapeTikTok = async () => {
       headless,
     });
 
-    return await botTestScreenshot(browser);
-    // return await handlePuppeteerPage(browser);
+    // return await botTestScreenshot(browser);
+    return await handlePuppeteerPage(browser);
   } catch (error) {
     logger("server").error(error);
   } finally {
