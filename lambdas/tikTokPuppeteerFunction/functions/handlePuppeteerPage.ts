@@ -69,17 +69,17 @@ export const handlePuppeteerPage = async (browser: Browser) => {
 
     await waitForTimeout(2000);
 
-    try {
-      // Make sure the cookie banner is hidden so further click events register
-      await page.evaluate(() => {
-        const cookieBanner = document.querySelector(
-          "tiktok-cookie-banner"
-        ) as HTMLElement;
-        if (cookieBanner) cookieBanner.style.display = "none";
-      });
-    } catch (e) {
-      console.error(e);
-    }
+    // try {
+    //   // Make sure the cookie banner is hidden so further click events register
+    //   await page.evaluate(() => {
+    //     const cookieBanner = document.querySelector(
+    //       "tiktok-cookie-banner"
+    //     ) as HTMLElement;
+    //     if (cookieBanner) cookieBanner.style.display = "none";
+    //   });
+    // } catch (e) {
+    //   console.error(e);
+    // }
 
     if (isLocal || isDebug)
       await writeScreenshotToS3({
