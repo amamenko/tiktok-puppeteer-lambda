@@ -39,7 +39,6 @@ export const scrapeTikTok = async () => {
             "--ignore-certificate-errors",
             "--disable-features=site-per-process",
             "--no-sandbox",
-            "--disable-gpu",
             "--disable-dev-shm-usage",
             "--disable-setuid-sandbox",
             "--no-first-run",
