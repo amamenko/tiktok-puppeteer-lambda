@@ -55,6 +55,7 @@ export const scrapeTikTok = async () => {
             "--lang=en-US",
             "--no-sandbox",
             "--ignore-certificate-errors-spki-list",
+            "--disable-gpu",
           ].filter((el) => el),
       ignoreHTTPSErrors: true,
       defaultViewport: {

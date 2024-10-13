@@ -1,10 +1,10 @@
-FROM public.ecr.aws/lambda/nodejs:18 as builder
+FROM public.ecr.aws/lambda/nodejs:20 as builder
 WORKDIR /usr/app
 COPY . .
 RUN npm install
 RUN npm run build
 
-FROM public.ecr.aws/lambda/nodejs:18
+FROM public.ecr.aws/lambda/nodejs:20
 WORKDIR ${LAMBDA_TASK_ROOT}
 COPY package.json ./
 COPY --from=builder /usr/app/dist/index.js ./
