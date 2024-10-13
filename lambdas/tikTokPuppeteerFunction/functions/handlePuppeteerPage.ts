@@ -61,11 +61,11 @@ export const handlePuppeteerPage = async (browser: Browser) => {
       waitUntil: "networkidle0",
     });
 
-    if (isLocal || isDebug)
-      await writeScreenshotToS3({
-        page,
-        filePath: "login-initial",
-      });
+    // if (isLocal || isDebug)
+    //   await writeScreenshotToS3({
+    //     page,
+    //     filePath: "login-initial",
+    //   });
 
     await waitForTimeout(2000);
 
