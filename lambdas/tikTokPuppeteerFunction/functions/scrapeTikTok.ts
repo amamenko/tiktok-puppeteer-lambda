@@ -4,7 +4,7 @@ import puppeteer from "puppeteer-extra";
 import StealthPlugin from "puppeteer-extra-plugin-stealth";
 import { handlePuppeteerPage } from "./handlePuppeteerPage";
 import { logger } from "../logger/logger";
-// import { botTestScreenshot } from "./botTestScreenshot";
+import { botTestScreenshot } from "./botTestScreenshot";
 
 const stealth = StealthPlugin();
 // Remove this specific stealth plugin from the default set
@@ -14,6 +14,7 @@ puppeteer.use(stealth);
 export const scrapeTikTok = async () => {
   let browser = null;
   const proxyAddress = process.env.PROXY_ADDRESS || "";
+  const isTestingBot = process.env.TESTING_BOT === "true";
 
   const isLocal =
     process.env.AWS_EXECUTION_ENV === undefined ||
@@ -44,15 +45,18 @@ export const scrapeTikTok = async () => {
           ].filter((el) => el),
       ignoreHTTPSErrors: true,
       defaultViewport: {
-        width: 1080,
-        height: 800,
+        width: 1440,
+        height: 812,
       },
       executablePath: exec_path,
       headless,
     });
 
-    // return await botTestScreenshot(browser);
-    return await handlePuppeteerPage(browser);
+    if (isTestingBot) {
+      return await botTestScreenshot(browser);
+    } else {
+      return await handlePuppeteerPage(browser);
+    }
   } catch (error) {
     logger("server").error(error);
   } finally {

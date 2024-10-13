@@ -39,8 +39,8 @@ export const handlePuppeteerPage = async (browser: Browser) => {
     logger("server").info(`Setting Puppeteer configuration settings`);
 
     await page.setViewport({
-      width: 1080,
-      height: 800,
+      width: 1440,
+      height: 812,
     });
     // Configure the navigation timeout
     page.setDefaultNavigationTimeout(0);
