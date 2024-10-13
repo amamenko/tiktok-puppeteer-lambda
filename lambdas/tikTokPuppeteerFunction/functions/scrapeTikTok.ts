@@ -31,6 +31,16 @@ export const scrapeTikTok = async () => {
     // we are running locally
     if (isLocal) exec_path = process.env.LOCAL_CHROMIUM;
 
+    logger("server").info(scrapingStatement);
+
+    if (proxyAddress) {
+      logger("server").info(
+        `Using proxy address ${proxyAddress} with username ${
+          process.env.PROXY_USERNAME || ""
+        } and password ${process.env.PROXY_PASSWORD || ""}`
+      );
+    }
+
     browser = await puppeteer.launch({
       args: isLocal
         ? []
