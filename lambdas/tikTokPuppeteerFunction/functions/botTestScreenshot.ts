@@ -30,6 +30,15 @@ export const botTestScreenshot = async (browser: Browser) => {
     const randomUA = generateRandomUA();
     await page.setUserAgent(randomUA);
 
+    await page.setRequestInterception(true);
+    page.on("request", async (request) => {
+      // Override headers
+      const headers = Object.assign({}, request.headers(), {
+        "Accept-Language": "en-US;q=0.7",
+      });
+      request.continue({ headers });
+    });
+
     logger("server").info(
       `Setting Puppeteer configuration settings for bot test.`
     );
@@ -47,15 +56,6 @@ export const botTestScreenshot = async (browser: Browser) => {
 
     await page.goto(botTestScreenshotSite, {
       waitUntil: "networkidle0",
-    });
-
-    await page.setRequestInterception(true);
-    page.on("request", async (request) => {
-      // Override headers
-      const headers = Object.assign({}, request.headers(), {
-        "Accept-Language": "en-US;q=0.7",
-      });
-      request.continue({ headers });
     });
 
     await writeScreenshotToS3({

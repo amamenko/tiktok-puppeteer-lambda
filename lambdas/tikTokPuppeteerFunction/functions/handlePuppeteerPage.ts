@@ -11,14 +11,6 @@ export const handlePuppeteerPage = async (browser: Browser) => {
     const proxyAddress = process.env.PROXY_ADDRESS || "";
     const page = await browser.newPage();
 
-    // Authenticate proxy before visiting the target website
-    if (proxyAddress) {
-      await page.authenticate({
-        username: process.env.PROXY_USERNAME || "",
-        password: process.env.PROXY_PASSWORD || "",
-      });
-    }
-
     await page.setRequestInterception(true);
     page.on("request", (request) => {
       // Override headers
@@ -27,6 +19,14 @@ export const handlePuppeteerPage = async (browser: Browser) => {
       });
       request.continue({ headers });
     });
+
+    // Authenticate proxy before visiting the target website
+    if (proxyAddress) {
+      await page.authenticate({
+        username: process.env.PROXY_USERNAME || "",
+        password: process.env.PROXY_PASSWORD || "",
+      });
+    }
 
     const randomUA = generateRandomUA();
     await page.setUserAgent(randomUA);

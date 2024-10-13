@@ -42,6 +42,7 @@ export const scrapeTikTok = async () => {
             "--no-first-run",
             "--no-zygote",
             "--deterministic-fetch",
+            "--lang=en-US",
           ].filter((el) => el),
       ignoreHTTPSErrors: true,
       defaultViewport: {
