@@ -44,8 +44,8 @@ export const scrapeTikTok = async () => {
           ].filter((el) => el),
       ignoreHTTPSErrors: true,
       defaultViewport: {
-        width: 1440,
-        height: 812,
+        width: 1080,
+        height: 800,
       },
       executablePath: exec_path,
       headless,
