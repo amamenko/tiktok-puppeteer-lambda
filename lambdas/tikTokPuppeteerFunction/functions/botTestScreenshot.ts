@@ -2,7 +2,6 @@ import { waitForTimeout } from "./waitForTimeout";
 import { Browser } from "puppeteer-core";
 import { logger } from "../logger/logger";
 import { writeScreenshotToS3 } from "./writeScreenshotToS3";
-import { generateRandomUA } from "./generateRandomUA";
 import { scrollToBottomOfPage } from "./utils/scrollToBottomOfPage";
 
 export const botTestScreenshot = async (browser: Browser) => {
@@ -26,9 +25,6 @@ export const botTestScreenshot = async (browser: Browser) => {
         password: process.env.PROXY_PASSWORD || "",
       });
     }
-
-    const randomUA = generateRandomUA();
-    await page.setUserAgent(randomUA);
 
     await page.setRequestInterception(true);
     page.on("request", async (request) => {

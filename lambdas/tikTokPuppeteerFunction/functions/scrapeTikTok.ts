@@ -5,6 +5,7 @@ import StealthPlugin from "puppeteer-extra-plugin-stealth";
 import { handlePuppeteerPage } from "./handlePuppeteerPage";
 import { logger } from "../logger/logger";
 import { botTestScreenshot } from "./botTestScreenshot";
+import { generateRandomUA } from "./generateRandomUA";
 
 const stealth = StealthPlugin();
 // Remove this specific stealth plugin from the default set
@@ -41,6 +42,8 @@ export const scrapeTikTok = async () => {
       );
     }
 
+    const randomUA = generateRandomUA();
+
     browser = await puppeteer.launch({
       args: isLocal
         ? []
@@ -56,6 +59,7 @@ export const scrapeTikTok = async () => {
             "--no-sandbox",
             "--ignore-certificate-errors-spki-list",
             "--disable-gpu",
+            `--user-agent="${randomUA}"`,
           ].filter((el) => el),
       ignoreHTTPSErrors: true,
       defaultViewport: {
