@@ -61,12 +61,30 @@ export const handlePuppeteerPage = async (browser: Browser) => {
       waitUntil: "networkidle0",
     });
 
+    if (isLocal || isDebug)
+      await writeScreenshotToS3({
+        page,
+        filePath: "login-initial",
+      });
+
     await waitForTimeout(2000);
+
+    try {
+      // Make sure the cookie banner is hidden so further click events register
+      await page.evaluate(() => {
+        const cookieBanner = document.querySelector(
+          "tiktok-cookie-banner"
+        ) as HTMLElement;
+        if (cookieBanner) cookieBanner.style.display = "none";
+      });
+    } catch (e) {
+      console.error(e);
+    }
 
     if (isLocal || isDebug)
       await writeScreenshotToS3({
         page,
-        filePath: "login",
+        filePath: "login-final",
       });
 
     // Top-right teal 'Log in' button
