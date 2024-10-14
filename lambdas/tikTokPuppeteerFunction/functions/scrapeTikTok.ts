@@ -44,23 +44,25 @@ export const scrapeTikTok = async () => {
 
     const randomUA = generateRandomUA();
 
+    const puppeteerLaunchArgs = isLocal
+      ? []
+      : [
+          ...args,
+          "--ignore-certificate-errors",
+          "--ignore-certificate-errors-spki-list",
+          "--disable-features=site-per-process",
+          "--no-first-run",
+          "--no-zygote",
+          "--deterministic-fetch",
+          "--lang=en-US",
+          "--no-sandbox",
+          "--disable-gpu",
+          `--user-agent=${randomUA}`,
+          ...(proxyAddress ? [`--proxy-server=${proxyAddress}`] : []),
+        ].filter((el) => el);
+
     browser = await puppeteer.launch({
-      args: isLocal
-        ? []
-        : [
-            ...args,
-            ...(proxyAddress ? [`--proxy-server=${proxyAddress}`] : []),
-            "--ignore-certificate-errors",
-            "--disable-features=site-per-process",
-            "--no-first-run",
-            "--no-zygote",
-            "--deterministic-fetch",
-            "--lang=en-US",
-            "--no-sandbox",
-            "--ignore-certificate-errors-spki-list",
-            "--disable-gpu",
-            `--user-agent="${randomUA}"`,
-          ].filter((el) => el),
+      args: puppeteerLaunchArgs,
       ignoreHTTPSErrors: true,
       defaultViewport: {
         width: 1440,

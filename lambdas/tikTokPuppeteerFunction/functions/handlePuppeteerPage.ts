@@ -12,11 +12,23 @@ export const handlePuppeteerPage = async (browser: Browser) => {
 
     await page.setRequestInterception(true);
     page.on("request", (request) => {
-      // Override headers
-      const headers = Object.assign({}, request.headers(), {
-        "Accept-Language": "en-US;q=0.7",
-      });
-      request.continue({ headers });
+      // Don't bother loading extra stuff we don't need since that affects proxy costs
+      if (
+        request.resourceType() === "image" ||
+        request.resourceType() === "font" ||
+        request.resourceType() === "stylesheet" ||
+        request.resourceType() === "media" ||
+        request.resourceType() === "manifest" ||
+        request.resourceType() === "other"
+      ) {
+        request.abort();
+      } else {
+        // Override headers
+        const headers = Object.assign({}, request.headers(), {
+          "Accept-Language": "en-US;q=0.7",
+        });
+        request.continue({ headers });
+      }
     });
 
     // Authenticate proxy before visiting the target website
